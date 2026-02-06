@@ -8,6 +8,9 @@ public class DoctorConfigurations : IEntityTypeConfiguration<Doctor>
 {
     public void Configure(EntityTypeBuilder<Doctor> builder)
     {
+        builder.HasOne(d => d.User)
+            .WithOne()
+            .HasForeignKey<Doctor>(d => d.UserId);
 
         builder.Property(x => x.Bio).HasMaxLength(1000);
         builder.Property(x => x.Title).HasMaxLength(200);

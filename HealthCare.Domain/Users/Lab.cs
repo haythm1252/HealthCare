@@ -12,12 +12,14 @@ public sealed class Lab : BaseEntity
     public string ProfilePicturePublicId { get; set; } = string.Empty;
     public decimal Rating { get; set; }
     public decimal HomeVisitFee { get; set; }
+    public TimeOnly OpeningTime { get; set; }
+    public TimeOnly ClosingTime { get; set; }
+    public string WorkingDays { get; set; } = string.Empty;
 
     public string UserId { get; set; } = string.Empty;
     public ApplicationUser User { get; set; } = default!;
 
     public ICollection<LabAppointment> LabAppointments { get; set; } = [];
-    public ICollection<LabShift> LabShifts { get; set; } = [];
     public ICollection<Review> Reviews { get; set; } = [];
     public ICollection<LabTest> LabTests { get; set; } = [];
 }

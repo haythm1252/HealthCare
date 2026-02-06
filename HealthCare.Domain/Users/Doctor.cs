@@ -18,7 +18,6 @@ public sealed class Doctor : BaseEntity
     public decimal Balance { get; set; }
     public bool AllowHomeVisit { get; set; } = false;
     public bool AllowOnlineConsultation { get; set; } = false;
-    public bool IsAvailable { get; set; } = false;  
     
     public string UserId { get; set; } = string.Empty;
     public ApplicationUser User { get; set; } = default!;

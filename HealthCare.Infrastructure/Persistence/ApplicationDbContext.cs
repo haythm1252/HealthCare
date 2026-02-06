@@ -29,7 +29,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Post> Posts => Set<Post>();
     public DbSet<Test> Tests => Set<Test>();
     public DbSet<TestResult> TestResults => Set<TestResult>();
-    public DbSet<LabShift> LabShifts => Set<LabShift>();
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<NurseShift> NurseShifts => Set<NurseShift>();
 

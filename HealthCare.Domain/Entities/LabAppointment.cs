@@ -8,6 +8,7 @@ namespace HealthCare.Domain.Entities;
 
 public sealed class LabAppointment : BaseEntity
 {
+    public DateOnly Date { get; set; }
     public AppointmentStatus Status { get; set; }
     public AppointmentType AppointmentType { get; set; }
     public decimal TotalFee { get; set; }
@@ -18,8 +19,6 @@ public sealed class LabAppointment : BaseEntity
     public Patient Patient { get; set; } = default!;
     public Guid LabId { get; set; }
     public Lab Lab { get; set; } = default!;
-    public Guid LabShiftId { get; set; }
-    public LabShift Labshift { get; set;} = default!;
 
     public ICollection<TestResult> TestResults { get; set; } = [];
 }

@@ -4,6 +4,7 @@ using HealthCare.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthCare.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260205205814_RemoveLabShift")]
+    partial class RemoveLabShift
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -761,8 +764,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SpecialtyId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Doctors");
                 });
@@ -817,13 +819,11 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("WorkingDays")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Labs");
                 });
@@ -872,8 +872,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Nurses");
                 });
@@ -933,8 +932,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Patients");
                 });
@@ -1337,8 +1335,8 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("HealthCare.Domain.Users.ApplicationUser", "User")
-                        .WithOne()
-                        .HasForeignKey("HealthCare.Domain.Users.Doctor", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1350,8 +1348,8 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("HealthCare.Domain.Users.Lab", b =>
                 {
                     b.HasOne("HealthCare.Domain.Users.ApplicationUser", "User")
-                        .WithOne()
-                        .HasForeignKey("HealthCare.Domain.Users.Lab", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1361,8 +1359,8 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("HealthCare.Domain.Users.Nurse", b =>
                 {
                     b.HasOne("HealthCare.Domain.Users.ApplicationUser", "User")
-                        .WithOne()
-                        .HasForeignKey("HealthCare.Domain.Users.Nurse", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1372,8 +1370,8 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("HealthCare.Domain.Users.Patient", b =>
                 {
                     b.HasOne("HealthCare.Domain.Users.ApplicationUser", "User")
-                        .WithOne()
-                        .HasForeignKey("HealthCare.Domain.Users.Patient", "UserId")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

@@ -8,6 +8,10 @@ public class NurseConfigurations : IEntityTypeConfiguration<Nurse>
 {
     public void Configure(EntityTypeBuilder<Nurse> builder)
     {
+        builder.HasOne(n => n.User)
+            .WithOne()
+            .HasForeignKey<Nurse>(n => n.UserId);
+
         builder.Property(x => x.Bio).HasMaxLength(1000);
         builder.Property(x => x.ProfilePictureUrl).HasMaxLength(500);
         builder.Property(x => x.ProfilePicturePublicId).HasMaxLength(200);
