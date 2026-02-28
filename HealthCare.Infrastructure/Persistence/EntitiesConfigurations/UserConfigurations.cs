@@ -29,10 +29,6 @@ public class UserConfigurations : IEntityTypeConfiguration<ApplicationUser>
             .IsRequired()
             .HasMaxLength(250);
 
-        builder.Property(x => x.Address)
-            .IsRequired()
-            .HasMaxLength(250);
-
         builder.Property(x => x.City)
             .IsRequired()
             .HasMaxLength(50);

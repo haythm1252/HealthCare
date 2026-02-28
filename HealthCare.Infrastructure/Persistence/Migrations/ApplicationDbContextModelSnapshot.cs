@@ -701,10 +701,6 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.Property<bool>("AllowOnlineConsultation")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("Balance")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<string>("Bio")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -887,8 +883,8 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("DateOfBirth")
+                        .HasColumnType("date");
 
                     b.Property<bool>("HasArthritis")
                         .HasColumnType("bit");

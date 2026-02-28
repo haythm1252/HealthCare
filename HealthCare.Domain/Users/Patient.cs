@@ -7,7 +7,7 @@ namespace HealthCare.Domain.Users;
 
 public sealed class Patient : BaseEntity
 {
-    public DateTime DateOfBirth { get; set; }
+    public DateOnly DateOfBirth { get; set; }
     public bool HasDiabetes { get; set; }
     public bool HasBloodPressure { get; set; }
     public bool HasAsthma { get; set; }

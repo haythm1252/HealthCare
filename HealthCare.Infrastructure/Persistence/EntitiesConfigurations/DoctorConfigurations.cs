@@ -20,7 +20,6 @@ public class DoctorConfigurations : IEntityTypeConfiguration<Doctor>
         builder.Property(x => x.OnlineFee).HasPrecision(18, 2);
         builder.Property(x => x.HomeFee).HasPrecision(18, 2);
         builder.Property(x => x.Rating).HasPrecision(3, 2);
-        builder.Property(x => x.Balance).HasPrecision(18, 2);
 
         
     }
