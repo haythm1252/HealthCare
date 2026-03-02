@@ -16,7 +16,7 @@ public record RegisterPatientCommand
     string Address,
     string? AddressUrl,
     string PhoneNumber,
-    Gender Gender,
+    string Gender,
     string Email,
     string Password,
     string ConfirmPassword,

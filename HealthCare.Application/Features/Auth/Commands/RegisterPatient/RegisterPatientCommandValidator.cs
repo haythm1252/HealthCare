@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using HealthCare.Application.Common.Consts;
+using HealthCare.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,6 +32,11 @@ public class RegisterPatientCommandValidator : AbstractValidator<RegisterPatient
         RuleFor(x => x.PhoneNumber)
             .NotEmpty()
             .Matches(RegexPatterns.PhoneNumber).WithMessage("Invalid phone number.");
+
+        RuleFor(x => x.Gender)
+            .NotEmpty()
+            .IsEnumName(typeof(Gender), caseSensitive: false)
+            .WithMessage("Please select a valid gender (Male or Female).");
 
         RuleFor(x => x.Email)
             .NotEmpty()
