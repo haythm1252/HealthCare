@@ -14,7 +14,7 @@ namespace HealthCare.Infrastructure.Services;
 public class JwtService(IOptions<JwtSettings> jwtSerttings) : IJwtService
 {
     private readonly JwtSettings _jwtSerttings = jwtSerttings.Value;
-
+    
     public (string token, int expireIn) GenerateToken(ApplicationUser user, string role)
     {
         var claims = new Claim[]

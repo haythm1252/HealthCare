@@ -19,6 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.IO;
+using System.Threading;
 
 namespace HealthCare.Infrastructure.Services;
 
@@ -130,6 +132,65 @@ public class AuthService(
         }
         return Result.Success();
     }
+    
+    public async Task<Result> ResendConfirmationEmailAsync(string email, string callbackUrl, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is null)
+            return Result.Failure(UserErrors.NotFound);
+
+        if (user.EmailConfirmed)
+            return Result.Failure(UserErrors.EmailConfirmed);
+
+        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+        _logger.LogInformation("Generated Email Confirmation Code (resend): {Code}", code);
+
+        await SendconfirmationEmailAsync(user, code, callbackUrl);
+        return Result.Success();
+    }
+    
+    public async Task<Result> ForgotPasswordAsync(string email, string callbackUrl, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is null)
+            return Result.Failure(UserErrors.NotFound);
+
+        if (user.EmailConfirmed == false)
+            return Result.Failure(UserErrors.EmailNotConfirmed);
+
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+        _logger.LogInformation("Generated Password Reset Token: {Token}", token);
+
+        await SendPasswordResetEmailAsync(user, token, callbackUrl);
+        return Result.Success();
+    }
+
+    public async Task<Result> ResetPasswordAsync(string userId, string token, string newPassword, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+            return Result.Failure(UserErrors.NotFound);
+
+        try
+        {
+            token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+        }
+        catch (FormatException)
+        {
+            return Result.Failure(UserErrors.InvalidCode);
+        }
+
+        var res = await _userManager.ResetPasswordAsync(user, token, newPassword);
+        if (!res.Succeeded)
+        {
+            var error = res.Errors.FirstOrDefault();
+            return Result.Failure(new Error(error!.Code, error.Description, 400));
+        }
+
+        return Result.Success();
+    }
     public async Task<bool> IsUserExist(string email, CancellationToken cancellationToken = default) 
         => await _userManager.Users.AnyAsync(u => u.Email == email, cancellationToken);
 
@@ -143,6 +204,19 @@ public class AuthService(
                 {"{{ConfirmationLink}}",$"{callbackUrl}?userId={user.Id}&code={code}" }
             });
        BackgroundJob.Enqueue(() => _emailService.SendEmailAsync(user.Email!, "Confirm your email", emailBody));
+    }
+    
+    private async Task SendPasswordResetEmailAsync(ApplicationUser user, string token, string callbackUrl)
+    {
+        var template = Path.Combine(_env.WebRootPath, "EmailTemplates", "PasswordReset.html");
+        var resetLink = $"{callbackUrl}?userId={user.Id}&token={token}";
+        var emailBody = EmailBodyBuilder.BuildEmailBody(template,
+            new Dictionary<string, string>
+            {
+                {"{{UserName}}", user.Name },
+                {"{{ResetLink}}", resetLink }
+            });
+        BackgroundJob.Enqueue(() => _emailService.SendEmailAsync(user.Email!, "Reset your password", emailBody));
     }
 
     private static string CreateRefreshToken() => Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
