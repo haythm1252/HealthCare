@@ -14,13 +14,4 @@ namespace HealthCare.Infrastructure.Repositories;
 
 public class PatientRepository(ApplicationDbContext context) : BaseRepository<Patient>(context), IPatientRepository
 {
-    private readonly ApplicationDbContext _context = context;
-
-    public async Task<PatientProfileResponse?> GetPatientProfileAsync(string userId, CancellationToken cancellationToken = default)
-    {
-        return await _context.Patients.Where(p => p.UserId == userId)
-                        .AsNoTracking()
-                        .ProjectToType<PatientProfileResponse>()
-                        .SingleOrDefaultAsync(cancellationToken);
-    }
 }

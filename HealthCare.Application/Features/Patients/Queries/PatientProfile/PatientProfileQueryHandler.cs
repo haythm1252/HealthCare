@@ -3,6 +3,7 @@ using HealthCare.Application.Errors;
 using HealthCare.Application.Features.Patients.Contracts;
 using HealthCare.Application.Interfaces.Repositories.UnitOfWork;
 using HealthCare.Domain.Users;
+using Mapster;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -21,11 +22,13 @@ public class PatientProfileQueryHandler(IUnitOfWork unitOfWork) : IRequestHandle
         if (!isUserExist) 
             return Result.Failure<PatientProfileResponse>(UserErrors.NotFound);
 
-        var patientProfileResponse = await _unitOfWork.Patients.GetPatientProfileAsync(request.UserId, cancellationToken);
+        var patient = await _unitOfWork.Patients
+            .GetAsync(p => p.UserId == request.UserId, [p => p.User], true, cancellationToken);
 
-        if (patientProfileResponse == null)
+        if (patient == null)
             return Result.Failure<PatientProfileResponse>(UserErrors.NotFound);
 
+        var patientProfileResponse = patient.Adapt<PatientProfileResponse>();
         return Result.Success(patientProfileResponse);
     }
 }

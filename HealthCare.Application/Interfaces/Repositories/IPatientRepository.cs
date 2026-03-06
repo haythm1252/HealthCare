@@ -10,5 +10,4 @@ namespace HealthCare.Application.Interfaces.Repositories;
 
 public interface IPatientRepository : IBaseRepository<Patient>
 {
-    Task<PatientProfileResponse?> GetPatientProfileAsync(string userId, CancellationToken cancellationToken = default);
 }
