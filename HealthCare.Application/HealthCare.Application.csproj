@@ -11,6 +11,7 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
     <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" Version="10.0.3" />
   </ItemGroup>
 
@@ -20,6 +21,8 @@
 
   <ItemGroup>
     <Folder Include="Features\Auth\Queries\" />
+    <Folder Include="Features\Nurses\Contracts\" />
+    <Folder Include="Features\Nurses\Queries\" />
     <Folder Include="Features\Patients\Commands\" />
   </ItemGroup>
 

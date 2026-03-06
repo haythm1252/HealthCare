@@ -14,4 +14,5 @@ public interface IAuthService
     Task<Result> ResetPasswordAsync(string userId, string token, string newPassword, CancellationToken cancellationToken = default);
     Task<Result> ChangePasswordAsync(string userId, string currentPassword, string newPassword, CancellationToken cancellationToken = default);
     Task<bool> IsUserExist(string email, CancellationToken cancellationToken = default);
+    Task<ApplicationUser?> GetUserByIdAsync(string userId, CancellationToken cancellationToken = default);
 }

@@ -9,8 +9,8 @@ public sealed class Post : BaseEntity
 {
     public string Title { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
-    public string ProfilePictureUrl { get; set; } = string.Empty;
-    public string ProfilePicturePublicId { get; set; } = string.Empty;
+    public string? AttachmentUrl { get; set; }
+    public string? AttachmentPublicId { get; set; }
     public bool IsPublished { get; set; }
     public bool IsContainsMedia { get; set; }
 
