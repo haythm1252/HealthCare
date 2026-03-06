@@ -27,3 +27,11 @@ public record PatientProfileResponse(
     string? OtherMedicalConditions,
     decimal? Weight 
 );
+public string Bio { get; set; } = string.Empty;
+public string ProfilePictureUrl { get; set; } = string.Empty;
+public string ProfilePicturePublicId { get; set; } = string.Empty;
+public decimal Rating { get; set; }
+public decimal HomeVisitFee { get; set; }
+public TimeOnly OpeningTime { get; set; }
+public TimeOnly ClosingTime { get; set; }
+public string WorkingDays { get; set; } = string.Empty;
