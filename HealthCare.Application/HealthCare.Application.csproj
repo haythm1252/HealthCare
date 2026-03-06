@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="Features\Auth\Queries\" />
+    <Folder Include="Features\Patients\Commands\" />
   </ItemGroup>
 
 </Project>

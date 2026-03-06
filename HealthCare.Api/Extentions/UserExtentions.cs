@@ -7,8 +7,6 @@ public static class UserExtentions
     extension(ClaimsPrincipal user)
     {
         public string? GetUserId()
-        {
-            return user.FindFirstValue(ClaimTypes.NameIdentifier);
-        }
+            => user.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 }

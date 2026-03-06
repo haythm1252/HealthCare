@@ -8,6 +8,6 @@ namespace HealthCare.Api.Controllers;
 [ApiController]
 public class LocationsController : ControllerBase
 {
-    [HttpGet("governorates")]
-    public IActionResult GetGovernorates() => Ok(EgyptGovernorates.All);
+    [HttpGet("cities")]
+    public IActionResult GetCities() => Ok(EgyptGovernorates.All);
 }

@@ -132,6 +132,22 @@ public class AuthService(
         }
         return Result.Success();
     }
+
+    public async Task<Result> ChangePasswordAsync(string userId, string currentPassword, string newPassword, CancellationToken cancellationToken = default)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+            return Result.Failure(UserErrors.NotFound);
+
+        var res = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        if (!res.Succeeded)
+        {
+            var error = res.Errors.FirstOrDefault();
+            return Result.Failure(new Error(error!.Code, error.Description, 400));
+        }
+
+        return Result.Success();
+    }
     
     public async Task<Result> ResendConfirmationEmailAsync(string email, string callbackUrl, CancellationToken cancellationToken = default)
     {

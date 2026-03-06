@@ -23,6 +23,16 @@ public static class DependencyInjection
             });
  
             services.AddOpenApi();
+            
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
 
             services.AddExceptionHandler<GlobalExeptionHandler>();
             services.AddProblemDetails();
