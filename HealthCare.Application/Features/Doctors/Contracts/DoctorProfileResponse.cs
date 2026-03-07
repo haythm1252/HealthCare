@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace HealthCare.Application.Features.Doctor.Contracts
+namespace HealthCare.Application.Features.Doctors.Contracts
 {
     internal class DoctorProfileResponse
     {

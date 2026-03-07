@@ -1,6 +1,6 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
-using HealthCare.Application.Features.Lab.Quries.LabProfileQuery; // تأكد من الـ Namespace
+using HealthCare.Application.Features.Labs.Queries.LabProfile; // تأكد من الـ Namespace
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

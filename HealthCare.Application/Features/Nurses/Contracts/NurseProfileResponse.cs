@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using HealthCare.Domain.Enums;
 
-namespace HealthCare.Application.Features.Nurse.Contracts
+namespace HealthCare.Application.Features.Nurses.Contracts
 {
     public record NurseProfileResponse(
     
@@ -17,10 +17,7 @@ namespace HealthCare.Application.Features.Nurse.Contracts
     string City,
     string Bio,
     string ProfilePictureUrl,
-    string ProfilePicturePublicId,
-    decimal Rating, 
-    decimal HomeVisitFee 
-
+    decimal Rating
     );
     
 }

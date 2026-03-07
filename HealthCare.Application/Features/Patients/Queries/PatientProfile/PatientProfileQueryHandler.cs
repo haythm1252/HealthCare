@@ -18,10 +18,6 @@ public class PatientProfileQueryHandler(IUnitOfWork unitOfWork) : IRequestHandle
 
     public async Task<Result<PatientProfileResponse>> Handle(PatientProfileQuery request, CancellationToken cancellationToken)
     {
-        var isUserExist = await _unitOfWork.Patients.AnyAsync(p => p.UserId == request.UserId, cancellationToken);
-        if (!isUserExist) 
-            return Result.Failure<PatientProfileResponse>(UserErrors.NotFound);
-
         var patient = await _unitOfWork.Patients
             .GetAsync(p => p.UserId == request.UserId, [p => p.User], true, cancellationToken);
 

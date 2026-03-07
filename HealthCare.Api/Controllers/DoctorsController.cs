@@ -5,7 +5,7 @@ namespace HealthCare.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DoctorController : ControllerBase
+    public class DoctorsController : ControllerBase
     {
     }
 }

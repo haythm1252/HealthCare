@@ -12,9 +12,9 @@ public sealed class DoctorAppointment : BaseEntity
     public AppointmentStatus Status { get; set; }
     public AppointmentType AppointmentType { get; set; }
     public decimal Fee { get; set; }
-    public string Diagnosis { get; set; } = string.Empty;
-    public string Prescriptions { get; set; } = string.Empty;
-    public string RequiredTests { get; set; } = string.Empty;
+    public string? Diagnosis { get; set; } 
+    public string? Prescriptions { get; set; } 
+    public string? RequiredTests { get; set; }
     public PaymentType PaymentType { get; set; }
     public string? PaymentId { get; set; }
     public DateTime? PaymentDate { get; set; }

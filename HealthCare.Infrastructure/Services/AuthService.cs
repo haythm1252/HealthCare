@@ -209,6 +209,8 @@ public class AuthService(
     }
     public async Task<bool> IsUserExist(string email, CancellationToken cancellationToken = default) 
         => await _userManager.Users.AnyAsync(u => u.Email == email, cancellationToken);
+    public async Task<ApplicationUser?> GetUserByIdAsync(string userId, CancellationToken cancellationToken = default)
+        => await _userManager.FindByIdAsync(userId);
 
     private async Task SendconfirmationEmailAsync(ApplicationUser user, string code, string callbackUrl)
     {
