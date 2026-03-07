@@ -58,4 +58,10 @@ public class AuthController(ISender mediatr) : ControllerBase
         var res = await _mediatr.Send(command, cancellationToken);
         return res.IsSuccess ? Ok() : res.ToProblem();
     }
+
+    [HttpGet("refresh")]
+    public async Task<IActionResult> RefreshToken(CancellationToken cancellationToken)
+    {
+        return Ok();
+    }
 }
