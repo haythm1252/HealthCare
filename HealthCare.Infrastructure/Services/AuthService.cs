@@ -149,6 +149,44 @@ public class AuthService(
         return Result.Success();
     }
     
+    public async Task<Result<AuthResponse>> GetRefreshTokenAsync(string token, string refreshToken, CancellationToken cancellationToken = default)
+    {
+        var userId = _jwtService.ValidateToken(token);
+        if (userId is null)
+            return Result.Failure<AuthResponse>(UserErrors.InvalidToken);
+
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+            return Result.Failure<AuthResponse>(UserErrors.InvalidToken);
+
+        if (user.IsDisabled)
+            return Result.Failure<AuthResponse>(UserErrors.DisabledUser);
+
+        var refershTokenData = user.RefreshTokens.FirstOrDefault(x => x.Token == refreshToken && x.IsActive);
+        if (refershTokenData is null)
+            return Result.Failure<AuthResponse>(UserErrors.InvalidRefreshToken);
+
+        refershTokenData.RevokedOn = DateTime.UtcNow;
+
+        var roles = await _userManager.GetRolesAsync(user);
+        var role = roles.FirstOrDefault();
+
+        (string jwtToken, int exp) = _jwtService.GenerateToken(user, role!);
+        var newRefreshToken = CreateRefreshToken();
+        var refreshTokenExpiration = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenExpiryDays);
+
+        user.RefreshTokens.Add(new RefreshToken
+        {
+            Token = newRefreshToken,
+            ExpiresOn = refreshTokenExpiration
+        });
+
+        await _userManager.UpdateAsync(user);
+
+        var response = new AuthResponse(user.Id, user.Email!, user.Name, role!,  jwtToken, exp, newRefreshToken, refreshTokenExpiration);
+        return Result.Success(response);
+    }
+    
     public async Task<Result> ResendConfirmationEmailAsync(string email, string callbackUrl, CancellationToken cancellationToken = default)
     {
         var user = await _userManager.FindByEmailAsync(email);

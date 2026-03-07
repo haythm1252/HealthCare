@@ -5,9 +5,13 @@ using HealthCare.Application.Features.Auth.Commands.ConfirmEmail;
 using HealthCare.Application.Features.Auth.Commands.ResendConfirmationEmail;
 using HealthCare.Application.Features.Auth.Commands.ForgotPassword;
 using HealthCare.Application.Features.Auth.Commands.ResetPassword;
+using HealthCare.Application.Features.Auth.Commands.RefreshToken;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using HealthCare.Api.Contracts.Auth;
+using HealthCare.Application.Features.Auth.Commands.ChangePassword;
 
 namespace HealthCare.Api.Controllers;
 
@@ -59,9 +63,20 @@ public class AuthController(ISender mediatr) : ControllerBase
         return res.IsSuccess ? Ok() : res.ToProblem();
     }
 
-    [HttpGet("refresh")]
-    public async Task<IActionResult> RefreshToken(CancellationToken cancellationToken)
+    [HttpPost("refresh")]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command, CancellationToken cancellationToken)
     {
-        return Ok();
+        var result = await _mediatr.Send(command, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+    }
+
+    [Authorize]
+    [HttpPost("Change-Password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request ,CancellationToken cancellationToken)
+    {
+        var command = new ChangePasswordCommand(User.GetUserId()!, request.CurrentPassword, request.NewPassword);
+
+        var result = await _mediatr.Send(command , cancellationToken);
+        return result.IsSuccess ? NoContent() : result.ToProblem();
     }
 }
