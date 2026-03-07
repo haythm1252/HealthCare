@@ -6,6 +6,7 @@ using HealthCare.Application.Errors;
 using HealthCare.Application.Interfaces.Repositories.UnitOfWork;
 using Mapster;
 using HealthCare.Application.Features.Nurses.Contracts;
+using Microsoft.EntityFrameworkCore;
 
 namespace HealthCare.Application.Features.Nurses.Queries.NurseProfile
 {
@@ -20,7 +21,11 @@ namespace HealthCare.Application.Features.Nurses.Queries.NurseProfile
 
         public async Task<Result<NurseProfileResponse>> Handle(NurseProfileQuery request, CancellationToken cancellationToken)
         {
-            var nurse = await _unitOfWork.Nurses.GetAsync(n => n.UserId == request.UserId, asNoTracking: true, cancellationToken: cancellationToken);
+            var nurse = await _unitOfWork.Nurses.AsQueryable()
+                .Where(n => n.UserId == request.UserId)
+                .Include(n => n.User)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(cancellationToken);
 
             if (nurse == null)
             {

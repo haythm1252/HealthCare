@@ -17,6 +17,8 @@ public class BaseRepository<T>(ApplicationDbContext context) : IBaseRepository<T
     private readonly ApplicationDbContext _context = context;
     private readonly DbSet<T> _dbSet = context.Set<T>();
 
+
+    public IQueryable<T> AsQueryable() => _dbSet;
     public async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
     {
         await _dbSet.AddAsync(entity, cancellationToken);
@@ -39,43 +41,6 @@ public class BaseRepository<T>(ApplicationDbContext context) : IBaseRepository<T
         return Task.CompletedTask;
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? criteria = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, List<Expression<Func<T, object>>>? includes = null, int? skip = null, int? take = null, bool asNoTracking = true, CancellationToken cancellationToken = default)
-    {
-        IQueryable<T> query = _dbSet;
-
-        if (criteria != null)
-            query = query.Where(criteria);
-
-        if (includes != null && includes.Any())
-            query = includes.Aggregate(query, (current, include) => current.Include(include));
-
-        if (orderBy != null)
-            query = orderBy(query);
-
-        if (asNoTracking)
-            query = query.AsNoTracking();
-
-        if (skip.HasValue)
-            query = query.Skip(skip.Value);
-
-        if (take.HasValue)
-            query = query.Take(take.Value);
-
-        return await query.ToListAsync(cancellationToken);
-    }
-
-    public Task<T?> GetAsync(Expression<Func<T, bool>> criteria, List<Expression<Func<T, object>>>? includes = null, bool asNoTracking = false, CancellationToken cancellationToken = default)
-    {
-        IQueryable<T> query = _dbSet;
-
-        if (includes != null && includes.Any())
-            query = includes.Aggregate(query, (current, include) => current.Include(include));
-
-        if (asNoTracking)
-            query = query.AsNoTracking();
-
-        return query.FirstOrDefaultAsync(criteria, cancellationToken);
-    }
 
     public Task Update(T entity)
     {

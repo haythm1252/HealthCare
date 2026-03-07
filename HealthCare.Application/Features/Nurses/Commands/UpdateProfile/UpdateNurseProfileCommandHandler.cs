@@ -4,6 +4,7 @@ using HealthCare.Application.Features.Patients.Contracts;
 using HealthCare.Application.Interfaces.Repositories.UnitOfWork;
 using HealthCare.Application.Services;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,8 +18,10 @@ public class UpdateNurseProfileCommandHandler(IUnitOfWork unitOfWork, IFileServi
 
     public async Task<Result> Handle(UpdateNurseProfileCommand request, CancellationToken cancellationToken)
     {
-        var nurse = await _unitOfWork.Nurses
-            .GetAsync(n => n.UserId == request.UserId, [n => n.User], false, cancellationToken);
+        var nurse = await _unitOfWork.Nurses.AsQueryable()
+                .Where(n => n.UserId == request.UserId)
+                .Include(n => n.User)
+                .SingleOrDefaultAsync(cancellationToken);
 
         if (nurse is null)
             return Result.Failure(UserErrors.NotFound);

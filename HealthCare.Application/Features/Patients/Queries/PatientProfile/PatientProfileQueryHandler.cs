@@ -5,6 +5,7 @@ using HealthCare.Application.Interfaces.Repositories.UnitOfWork;
 using HealthCare.Domain.Users;
 using Mapster;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -18,8 +19,11 @@ public class PatientProfileQueryHandler(IUnitOfWork unitOfWork) : IRequestHandle
 
     public async Task<Result<PatientProfileResponse>> Handle(PatientProfileQuery request, CancellationToken cancellationToken)
     {
-        var patient = await _unitOfWork.Patients
-            .GetAsync(p => p.UserId == request.UserId, [p => p.User], true, cancellationToken);
+        var patient = await _unitOfWork.Patients.AsQueryable()
+            .Where(p => p.UserId == request.UserId)
+            .Include(p => p.User)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(cancellationToken);
 
         if (patient == null)
             return Result.Failure<PatientProfileResponse>(UserErrors.NotFound);
