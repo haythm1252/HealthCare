@@ -10,8 +10,5 @@ public class ResendConfirmationEmailCommandValidator : AbstractValidator<ResendC
             .NotEmpty()
             .EmailAddress();
 
-        RuleFor(x => x.CallbackUrl)
-            .NotEmpty()
-            .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Absolute)).WithMessage("Callback URL must be a valid URL.");
     }
 }

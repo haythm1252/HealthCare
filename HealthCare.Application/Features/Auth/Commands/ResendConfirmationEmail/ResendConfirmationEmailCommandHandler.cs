@@ -12,6 +12,6 @@ public class ResendConfirmationEmailCommandHandler(IAuthService authService) : I
 
     public async Task<Result> Handle(ResendConfirmationEmailCommand request, CancellationToken cancellationToken)
     {
-        return await _authService.ResendConfirmationEmailAsync(request.Email, request.CallbackUrl, cancellationToken);
+        return await _authService.ResendConfirmationEmailAsync(request.Email, cancellationToken);
     }
 }

@@ -3,4 +3,4 @@ using MediatR;
 
 namespace HealthCare.Application.Features.Auth.Commands.ConfirmEmail;
 
-public record ConfirmEmailCommand(string UserId, string Token) : IRequest<Result>;
+public record ConfirmEmailCommand(string Email, string Otp) : IRequest<Result>;

@@ -13,6 +13,6 @@ public class ConfirmEmailCommandHandler(IAuthService authService) : IRequestHand
 
     public async Task<Result> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
     {
-        return await _authService.ConfirmEmailAsync(request.UserId, request.Token, cancellationToken);
+        return await _authService.ConfirmEmailAsync(request.Email, request.Otp, cancellationToken);
     }
 }

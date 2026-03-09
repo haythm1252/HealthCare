@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HealthCare.Domain.Users;
 
-public sealed class Patient : BaseEntity
+public sealed class Patient : BaseUser
 {
     public DateOnly DateOfBirth { get; set; }
     public bool HasDiabetes { get; set; }

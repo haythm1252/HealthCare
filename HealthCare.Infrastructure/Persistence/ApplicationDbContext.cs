@@ -31,6 +31,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<TestResult> TestResults => Set<TestResult>();
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<NurseShift> NurseShifts => Set<NurseShift>();
+    public DbSet<EmailOtp> EmailOtps => Set<EmailOtp>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

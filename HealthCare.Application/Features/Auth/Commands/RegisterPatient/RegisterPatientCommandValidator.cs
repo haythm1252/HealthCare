@@ -48,8 +48,6 @@ public class RegisterPatientCommandValidator : AbstractValidator<RegisterPatient
             .MinimumLength(8)
             .Matches(RegexPatterns.Password).WithMessage("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.");
 
-        RuleFor(x => x.ConfirmPassword)
-            .Equal(x => x.Password).WithMessage("Passwords do not match.");
 
         RuleFor(x => x.AddressUrl)
             .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Absolute)).When(x => !string.IsNullOrWhiteSpace(x.AddressUrl))
@@ -67,9 +65,6 @@ public class RegisterPatientCommandValidator : AbstractValidator<RegisterPatient
             .GreaterThan(0).When(x => x.Weight.HasValue).WithMessage("Weight must be greater than 0.")
             .LessThan(300).When(x => x.Weight.HasValue).WithMessage("Weight must be less than 300 kg.");
 
-        RuleFor(x => x.CallbackUrl)
-            .NotEmpty()
-            .Must(uri => Uri.IsWellFormedUriString(uri, UriKind.Absolute)).WithMessage("Callback URL must be a valid URL.");
 
 
     }

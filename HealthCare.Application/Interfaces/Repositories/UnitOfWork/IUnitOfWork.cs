@@ -26,6 +26,8 @@ public interface IUnitOfWork : IDisposable
     ITestResultRepository TestResults { get; }
     IReviewRepository Reviews { get; }
     INurseShiftRepository NurseShifts { get; }
+    IEmailOtpRepository EmailOtps { get; }
+    IUserRepository Users { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

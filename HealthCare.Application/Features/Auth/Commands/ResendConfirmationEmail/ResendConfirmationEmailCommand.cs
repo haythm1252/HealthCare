@@ -3,4 +3,4 @@ using MediatR;
 
 namespace HealthCare.Application.Features.Auth.Commands.ResendConfirmationEmail;
 
-public record ResendConfirmationEmailCommand(string Email, string CallbackUrl) : IRequest<Result>;
+public record ResendConfirmationEmailCommand(string Email) : IRequest<Result>;

@@ -8,5 +8,7 @@ public static class DefaultRoles
     public const string Nurse = "Nurse";
     public const string Lab = "Lab";
 
-    public static readonly IReadOnlyList<string> AllRoles = new List<string> { Admin, Patient, Doctor, Nurse, Lab };
+    public static readonly IReadOnlyList<string> AllRoles = [Admin, Patient, Doctor, Nurse, Lab];
+
+    public static readonly IReadOnlyList<string> MedicalStaffRoles = [Doctor, Nurse, Lab];
 }

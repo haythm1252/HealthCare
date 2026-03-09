@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Infrastructure.Repositories.Base;
 
-public class BaseRepository<T>(ApplicationDbContext context) : IBaseRepository<T> where T : BaseEntity
+public class BaseRepository<T>(ApplicationDbContext context) : IBaseRepository<T> where T : class
 {
     private readonly ApplicationDbContext _context = context;
     private readonly DbSet<T> _dbSet = context.Set<T>();

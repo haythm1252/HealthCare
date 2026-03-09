@@ -19,9 +19,7 @@ public record RegisterPatientCommand
     string Gender,
     string Email,
     string Password,
-    string ConfirmPassword,
     DiseasesDto Diseases,
-    decimal? Weight,
-    string CallbackUrl
+    decimal? Weight
 ) : IRequest<Result<RegisterResponse>>;
 

@@ -3,4 +3,4 @@ using MediatR;
 
 namespace HealthCare.Application.Features.Auth.Commands.ResetPassword;
 
-public record ResetPasswordCommand(string UserId, string Token, string NewPassword, string ConfirmPassword) : IRequest<Result>;
+public record ResetPasswordCommand(string Email, string Otp, string NewPassword) : IRequest<Result>;

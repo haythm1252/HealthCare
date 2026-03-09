@@ -16,8 +16,10 @@ public static class UserErrors
         new("User.EmailNotConfirmed", "Email is Not Confirmed", 401);
     public static readonly Error EmailConfirmed =
         new("User.EmailConfirmed", "Email is already Confirmed", 400);
-    public static readonly Error InvalidCode =
-        new("User.InvalidCode", "Invalid code", 401);
+    public static readonly Error InvalidOtp =
+        new("User.InvalidOtp", "otp is wrong", 400); 
+    public static readonly Error OtpExpired =
+        new("User.OtpExpired", "otp expiry has end", 400);
     public static readonly Error DisabledUser =
         new("User.DisabledUser", "Disabled user, please contact your administrator", 401);
     public static readonly Error LockedUser =

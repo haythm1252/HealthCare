@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HealthCare.Domain.Users;
 
-public sealed class Doctor : BaseEntity
+public sealed class Doctor : BaseUser
 {
     public string Bio { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;

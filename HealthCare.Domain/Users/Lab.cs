@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HealthCare.Domain.Users;
 
-public sealed class Lab : BaseEntity
+public sealed class Lab : BaseUser
 {
     public string Bio { get; set; } = string.Empty;
     public string ProfilePictureUrl { get; set; } = string.Empty;

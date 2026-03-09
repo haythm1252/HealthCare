@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Application.Interfaces.Repositories.Base;
 
-public interface IBaseRepository<T> where T : BaseEntity
+public interface IBaseRepository<T> where T : class
 {
     IQueryable<T> AsQueryable();
     Task<T> AddAsync(T entity, CancellationToken cancellationToken = default);

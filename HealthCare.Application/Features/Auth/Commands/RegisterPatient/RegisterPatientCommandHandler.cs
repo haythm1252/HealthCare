@@ -28,6 +28,7 @@ public class RegisterPatientCommandHandler(IAuthService authService, IUnitOfWork
 
         var patient = request.Adapt<Patient>();
         patient.UserId = result.Value.UserId;
+
         await _unitOfWork.Patients.AddAsync(patient, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);  
 

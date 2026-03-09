@@ -3,4 +3,4 @@ using MediatR;
 
 namespace HealthCare.Application.Features.Auth.Commands.ForgotPassword;
 
-public record ForgotPasswordCommand(string Email, string CallbackUrl) : IRequest<Result>;
+public record ForgotPasswordCommand(string Email) : IRequest<Result>;

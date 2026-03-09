@@ -79,4 +79,5 @@ public class AuthController(ISender mediatr) : ControllerBase
         var result = await _mediatr.Send(command , cancellationToken);
         return result.IsSuccess ? NoContent() : result.ToProblem();
     }
+
 }

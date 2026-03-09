@@ -15,7 +15,5 @@ public class ChangePasswordRequestValidator : AbstractValidator<ChangePasswordRe
             .MinimumLength(8)
             .Matches(RegexPatterns.Password).WithMessage("Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.");
 
-        RuleFor(x => x.ConfirmPassword)
-            .Equal(x => x.NewPassword).WithMessage("Passwords do not match.");
     }
 }
