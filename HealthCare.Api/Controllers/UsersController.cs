@@ -1,4 +1,6 @@
-﻿using HealthCare.Application.Common.Consts;
+﻿using HealthCare.Api.Extentions;
+using HealthCare.Application.Common.Consts;
+using HealthCare.Application.Features.Users.Commands.MedicalStaffRegister;
 using HealthCare.Application.Features.Users.Queries.GetUsers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -20,4 +22,13 @@ public class UsersController(ISender mediatr) : ControllerBase
         var result = await _mediatr.Send(query, cancellationToken);
         return Ok(result);
     }
+
+    [Authorize(Roles = DefaultRoles.Admin)]
+    [HttpPost("medical-staff-registeration")]
+    public async Task<IActionResult> MedicalStaffRegister([FromBody] MedicalStaffRegisterCommand command, CancellationToken cancellationToken)
+    {
+        var res = await _mediatr.Send(command, cancellationToken);
+        return res.IsSuccess ? Ok(res.Value) : res.ToProblem();
+    }
+
 }

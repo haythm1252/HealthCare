@@ -9,12 +9,12 @@ namespace HealthCare.Application.Features.Users.Commands.MedicalStaffRegister;
 
 public record MedicalStaffRegisterCommand(
     string Name,
-    string Gender,
+    string? Gender,
     string Email,
     string Address,
     string PhoneNumber,
     string City,
-    string? SpecialityId,
+    Guid? SpecialityId,
     string Role
 
 ) : IRequest<Result<RegisterResponse>>;

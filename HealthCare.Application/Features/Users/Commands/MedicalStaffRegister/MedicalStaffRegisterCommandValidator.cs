@@ -31,9 +31,17 @@ public class MedicalStaffRegisterCommandValidator : AbstractValidator<MedicalSta
             .Matches(RegexPatterns.PhoneNumber).WithMessage("Invalid phone number.");
 
         RuleFor(x => x.Gender)
-            .NotEmpty()
+            .Empty().WithMessage("Labs cannot have a Gender specified.")
+            .When(x => x.Role == DefaultRoles.Lab);
+
+        RuleFor(x => x.Gender)
+            .NotEmpty().WithMessage("Gender is required for medical staff.")
+            .When(x => x.Role != DefaultRoles.Lab);
+
+        RuleFor(x => x.Gender)
             .IsEnumName(typeof(Gender), caseSensitive: false)
-            .WithMessage("Please select a valid gender (Male or Female).");
+            .WithMessage("Please select a valid gender (Male or Female).")
+            .When(x => x.Role != DefaultRoles.Lab && !string.IsNullOrEmpty(x.Gender));
 
         RuleFor(x => x.Email)
             .NotEmpty()
@@ -46,11 +54,12 @@ public class MedicalStaffRegisterCommandValidator : AbstractValidator<MedicalSta
 
         RuleFor(x => x.SpecialityId)
             .NotEmpty()
+            .NotEqual(Guid.Empty).WithMessage("Invalid ID format.")
             .When(x => x.Role == DefaultRoles.Doctor)
             .WithMessage("SpecialityId is required for doctors.");
 
         RuleFor(x => x.SpecialityId)
-            .Null()
+            .Empty()
             .When(x => x.Role != DefaultRoles.Doctor)
             .WithMessage("SpecialityId should not be provided for non-doctors, Only doctors can have a Speciality.");
     }

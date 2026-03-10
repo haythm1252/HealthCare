@@ -5,6 +5,7 @@ using HealthCare.Application.Features.Auth.Commands.ConfirmEmail;
 using HealthCare.Application.Features.Auth.Commands.ResendConfirmationEmail;
 using HealthCare.Application.Features.Auth.Commands.ForgotPassword;
 using HealthCare.Application.Features.Auth.Commands.ResetPassword;
+using HealthCare.Application.Features.Auth.Commands.VerifyResetPasswordOtp;
 using HealthCare.Application.Features.Auth.Commands.RefreshToken;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -58,6 +59,13 @@ public class AuthController(ISender mediatr) : ControllerBase
 
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)
+    {
+        var res = await _mediatr.Send(command, cancellationToken);
+        return res.IsSuccess ? Ok() : res.ToProblem();
+    }
+
+    [HttpPost("verify-reset-otp")]
+    public async Task<IActionResult> VerifyResetOtp([FromBody] VerifyResetPasswordOtpCommand command, CancellationToken cancellationToken)
     {
         var res = await _mediatr.Send(command, cancellationToken);
         return res.IsSuccess ? Ok() : res.ToProblem();
