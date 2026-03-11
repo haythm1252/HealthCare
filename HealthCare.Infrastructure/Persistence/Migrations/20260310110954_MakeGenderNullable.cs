@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HealthCare.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class sss : Migration
+    public partial class MakeGenderNullable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

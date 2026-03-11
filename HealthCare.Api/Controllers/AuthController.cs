@@ -11,8 +11,8 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using HealthCare.Api.Contracts.Auth;
 using HealthCare.Application.Features.Auth.Commands.ChangePassword;
+using HealthCare.Application.Features.Auth.Contracts;
 
 namespace HealthCare.Api.Controllers;
 

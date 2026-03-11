@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using HealthCare.Application.Common.Consts;
 
-namespace HealthCare.Api.Contracts.Auth;
+namespace HealthCare.Application.Features.Auth.Commands.ChangePassword;
 
-public class ChangePasswordRequestValidator : AbstractValidator<ChangePasswordRequest>
+public class ChangePasswordCommandValidator : AbstractValidator<ChangePasswordCommand>
 {
-    public ChangePasswordRequestValidator()
+    public ChangePasswordCommandValidator()
     {
         RuleFor(x => x.CurrentPassword)
         .NotEmpty().WithMessage("Current password is required.");

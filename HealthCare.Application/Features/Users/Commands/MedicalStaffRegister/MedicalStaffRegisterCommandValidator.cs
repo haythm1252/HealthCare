@@ -55,6 +55,7 @@ public class MedicalStaffRegisterCommandValidator : AbstractValidator<MedicalSta
         RuleFor(x => x.SpecialityId)
             .NotEmpty()
             .NotEqual(Guid.Empty).WithMessage("Invalid ID format.")
+            .Must(id => GuidTryParse(id)).WithMessage("Speciality ID must be a valid GUID.")
             .When(x => x.Role == DefaultRoles.Doctor)
             .WithMessage("SpecialityId is required for doctors.");
 
@@ -64,6 +65,9 @@ public class MedicalStaffRegisterCommandValidator : AbstractValidator<MedicalSta
             .WithMessage("SpecialityId should not be provided for non-doctors, Only doctors can have a Speciality.");
     }
 
-
+    private bool GuidTryParse(Guid? value)
+    {
+        return Guid.TryParse(value.ToString(), out _);
+    }
 
 }

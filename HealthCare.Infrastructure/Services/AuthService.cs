@@ -151,6 +151,9 @@ public class AuthService(
             return Result.Failure<RegisterResponse>(new Error(error.Code, error.Description, 400));
         }
 
+        user.EmailConfirmed = true;
+        await _userManager.UpdateAsync(user);
+
         await SendMedicalAccountCreatedEmail(user, password);
 
         var response = new RegisterResponse(user.Id, user.Email!, request.Role, "User Register successfully");

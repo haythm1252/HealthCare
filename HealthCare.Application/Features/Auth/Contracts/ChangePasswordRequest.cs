@@ -1,4 +1,4 @@
-﻿namespace HealthCare.Api.Contracts.Auth;
+﻿namespace HealthCare.Application.Features.Auth.Contracts;
 
 public record ChangePasswordRequest(
     string CurrentPassword,

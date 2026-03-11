@@ -2,11 +2,11 @@
 using HealthCare.Application.Common.Consts;
 using HealthCare.Application.Common.Helpers;
 
-namespace HealthCare.Api.Contracts.Nurses;
+namespace HealthCare.Application.Features.Nurses.Commands.UpdateProfile;
 
-public class UpdateNurseProfileRequestValidator : AbstractValidator<UpdateNurseProfileRequest>
+public class UpdateNurseProfileCommandValidator : AbstractValidator<UpdateNurseProfileCommand>
 {
-    public UpdateNurseProfileRequestValidator()
+    public UpdateNurseProfileCommandValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Name is required.")
@@ -25,6 +25,10 @@ public class UpdateNurseProfileRequestValidator : AbstractValidator<UpdateNurseP
             .NotEmpty()
             .Must(EgyptGovernorates.IsValid)
             .WithMessage("Invalid governorate, Please select a valid governorate.");
+
+        RuleFor(x => x.Bio)
+            .NotEmpty()
+            .MaximumLength(1000);
 
         RuleFor(x => x.ProfilePicture!)
             .SetValidator(new ImageValidator()).When(x => x.ProfilePicture is not null);

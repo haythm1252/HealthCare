@@ -1,4 +1,6 @@
-﻿namespace HealthCare.Api.Contracts.Nurses;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace HealthCare.Application.Features.Nurses.Contracts;
 
 public record UpdateNurseProfileRequest(
     string Name,

@@ -1,5 +1,6 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
+using HealthCare.Application.Features.Users.Commands.BlockUser;
 using HealthCare.Application.Features.Users.Commands.MedicalStaffRegister;
 using HealthCare.Application.Features.Users.Queries.GetUsers;
 using MediatR;
@@ -21,6 +22,14 @@ public class UsersController(ISender mediatr) : ControllerBase
     {
         var result = await _mediatr.Send(query, cancellationToken);
         return Ok(result);
+    }
+
+    [Authorize(Roles = DefaultRoles.Admin)]
+    [HttpPatch("{id}/toggle-status")]
+    public async Task<IActionResult> ToggleUserStatus([FromRoute] string id, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(new ToggleUserStatusCommand(id), cancellationToken);
+        return result.IsSuccess ? Ok() : result.ToProblem();
     }
 
     [Authorize(Roles = DefaultRoles.Admin)]

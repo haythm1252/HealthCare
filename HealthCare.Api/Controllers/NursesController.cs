@@ -1,7 +1,7 @@
-﻿using HealthCare.Api.Contracts.Nurses;
-using HealthCare.Api.Extentions;
+﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
 using HealthCare.Application.Features.Nurses.Commands.UpdateProfile;
+using HealthCare.Application.Features.Nurses.Contracts;
 using HealthCare.Application.Features.Nurses.Queries.NurseProfile;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +22,6 @@ public class NursesController(ISender mediatr) : ControllerBase
     public async Task<IActionResult> GetNurseProfile(CancellationToken cancellationToken)
     {
         var res = await _mediatr.Send(new NurseProfileQuery(User.GetUserId()!), cancellationToken);
-
         return res.IsSuccess ? Ok(res.Value) : res.ToProblem();
     }
 
