@@ -15,10 +15,14 @@ public sealed class DoctorAppointment : BaseEntity
     public string? Diagnosis { get; set; } 
     public string? Prescriptions { get; set; } 
     public string? RequiredTests { get; set; }
-    public PaymentType PaymentType { get; set; }
-    public string? PaymentId { get; set; }
-    public DateTime? PaymentDate { get; set; }
     public string? Address { get; set; }
+    public PaymentType PaymentType { get; set; }
+
+    public string? PaymentOrderId { get; set; }
+    public string? PaymentTransactionId { get;set;  }
+    public PaymentStatus PaymentStatus { get; set; }
+    public DateTime? PaymentDate { get; set; }
+
 
     public Guid DoctorSlotId { get; set; }
     public DoctorSlot DoctorSlot { get; set; } = default!;

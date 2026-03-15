@@ -29,7 +29,7 @@ public class PatientsController(ISender mediatr) : ControllerBase
 
     [Authorize(Roles = DefaultRoles.Patient)]
     [HttpPut("profile")]
-    public async Task<IActionResult> UpdateLabProfile([FromForm] UpdatePatientProfileRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdatePatientsProfile([FromForm] UpdatePatientProfileRequest request, CancellationToken cancellationToken)
     {
         var command = new UpdatePatientProfileCommand(
                 User.GetUserId()!,

@@ -22,6 +22,10 @@ public class DoctorAppointmentConfigurations : IEntityTypeConfiguration<DoctorAp
             .HasConversion<string>()
             .HasMaxLength(20);
 
+        builder.Property(x => x.PaymentStatus)
+            .HasConversion<string>()
+            .HasMaxLength(40);
+
         builder.Property(x => x.Fee).HasPrecision(18, 2);
 
         

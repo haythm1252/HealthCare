@@ -3,6 +3,7 @@ using HealthCare.Application.Common.Consts;
 using HealthCare.Application.Features.Doctors.Commands.UpdateProfile;
 using HealthCare.Application.Features.Doctors.Contracts;
 using HealthCare.Application.Features.Doctors.Queries.DoctorProfile;
+using HealthCare.Application.Features.Doctors.Queries.GetDoctors;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,13 @@ namespace HealthCare.Api.Controllers
     public class DoctorsController(ISender mediatr) : ControllerBase
     {
         private readonly ISender _mediatr = mediatr;
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] GetDoctorsQuery query, CancellationToken cancellationToken)
+        {
+            var result = await _mediatr.Send(query, cancellationToken);
+            return Ok(result);
+        }
 
         [Authorize(Roles = DefaultRoles.Doctor)]
         [HttpGet("profile")]

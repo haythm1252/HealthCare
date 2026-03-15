@@ -1,4 +1,5 @@
-﻿using HealthCare.Domain.Users;
+﻿using HealthCare.Domain.Enums;
+using HealthCare.Domain.Users;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,10 +12,6 @@ public sealed class Review : BaseEntity
     public string Comment { get; set; } = string.Empty;
     public Guid PatientId { get; set; }
     public Patient Patient { get; set; } = default!;
-    public Guid? DoctorId { get; set; }
-    public Doctor? Doctor { get; set; }
-    public Guid? NurseId { get; set; }
-    public Nurse? Nurse { get; set; }
-    public Guid? LabId { get; set; }
-    public Lab? Lab { get; set; }
+    public Guid TargetId { get; set; }
+    public TargetType TargetType { get; set; }
 }

@@ -4,6 +4,7 @@ using HealthCare.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthCare.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260312090124_EditLabWorkingdaysReviewsTarget")]
+    partial class EditLabWorkingdaysReviewsTarget
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,15 +100,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PaymentOrderId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentStatus")
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)");
-
-                    b.Property<string>("PaymentTransactionId")
+                    b.Property<string>("PaymentId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PaymentType")
@@ -780,9 +775,6 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                         .HasPrecision(3, 2)
                         .HasColumnType("decimal(3,2)");
 
-                    b.Property<int>("RatingsCount")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("SpecialtyId")
                         .HasColumnType("uniqueidentifier");
 
@@ -843,9 +835,6 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                         .HasPrecision(3, 2)
                         .HasColumnType("decimal(3,2)");
 
-                    b.Property<int>("RatingsCount")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -873,9 +862,6 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("HourPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
@@ -892,9 +878,6 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.Property<decimal>("Rating")
                         .HasPrecision(3, 2)
                         .HasColumnType("decimal(3,2)");
-
-                    b.Property<int>("RatingsCount")
-                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()

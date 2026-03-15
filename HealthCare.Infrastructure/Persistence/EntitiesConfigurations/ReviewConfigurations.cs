@@ -10,5 +10,9 @@ public class ReviewConfigurations : IEntityTypeConfiguration<Review>
     {
         builder.Property(x => x.Rating).HasPrecision(3, 2);
         builder.Property(x => x.Comment).HasMaxLength(1000);
+
+        builder.Property(x => x.TargetType)
+            .HasConversion<string>()
+            .HasMaxLength(20);
     }
 }

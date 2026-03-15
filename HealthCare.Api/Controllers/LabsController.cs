@@ -1,7 +1,9 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
+using HealthCare.Application.Features.Doctors.Queries.GetDoctors;
 using HealthCare.Application.Features.Labs.Commands.UpdateProfile;
 using HealthCare.Application.Features.Labs.Contracts;
+using HealthCare.Application.Features.Labs.Queries.GetLabs;
 using HealthCare.Application.Features.Labs.Queries.LabProfile; 
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -14,6 +16,14 @@ namespace HealthCare.Api.Controllers;
 public class LabsController(ISender mediatr) : ControllerBase
 {
     private readonly ISender _mediatr = mediatr;
+
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromQuery] GetLabsQuery query, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(query, cancellationToken);
+        return Ok(result);
+    }
 
     [Authorize(Roles = DefaultRoles.Lab)]
     [HttpGet("profile")]

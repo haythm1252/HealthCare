@@ -14,5 +14,5 @@ public record GetUsersQuery(
     bool Descending = false,
     bool IsDisabled = false,
     int PageNumber = 1,
-    int PageSize = 10
+    int PageSize = 20
 ) : IRequest<PagedList<UserResponse>>;

@@ -11,10 +11,11 @@ public sealed class Lab : BaseUser
     public string ProfilePictureUrl { get; set; } = string.Empty;
     public string ProfilePicturePublicId { get; set; } = string.Empty;
     public decimal Rating { get; set; }
+    public int RatingsCount { get; set; }
     public decimal HomeVisitFee { get; set; }
     public TimeOnly OpeningTime { get; set; }
     public TimeOnly ClosingTime { get; set; }
-    public string WorkingDays { get; set; } = string.Empty;
+    public WorkingDays WorkingDays { get; set; } = new();
 
     public string UserId { get; set; } = string.Empty;
     public ApplicationUser User { get; set; } = default!;

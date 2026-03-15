@@ -11,7 +11,9 @@ public sealed class Nurse : BaseUser
     public string ProfilePictureUrl { get; set; } = string.Empty;
     public string ProfilePicturePublicId { get; set; } = string.Empty;
     public decimal Rating { get; set; }
+    public int RatingsCount { get; set; }
     public decimal HomeVisitFee { get; set; }
+    public decimal HourPrice { get; set; }
 
     public string UserId { get; set; } = string.Empty;
     public ApplicationUser User { get; set; } = default!;

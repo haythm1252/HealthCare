@@ -4,6 +4,7 @@ using HealthCare.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthCare.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260313130103_EditPaymentCloumns")]
+    partial class EditPaymentCloumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -780,9 +783,6 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                         .HasPrecision(3, 2)
                         .HasColumnType("decimal(3,2)");
 
-                    b.Property<int>("RatingsCount")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("SpecialtyId")
                         .HasColumnType("uniqueidentifier");
 
@@ -843,9 +843,6 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                         .HasPrecision(3, 2)
                         .HasColumnType("decimal(3,2)");
 
-                    b.Property<int>("RatingsCount")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -892,9 +889,6 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.Property<decimal>("Rating")
                         .HasPrecision(3, 2)
                         .HasColumnType("decimal(3,2)");
-
-                    b.Property<int>("RatingsCount")
-                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .IsRequired()

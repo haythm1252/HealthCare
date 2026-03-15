@@ -15,6 +15,7 @@ public sealed class Doctor : BaseUser
     public decimal OnlineFee { get; set; }
     public decimal HomeFee { get; set; }
     public decimal Rating { get; set; }
+    public int RatingsCount { get; set; }
 
     public bool AllowHomeVisit { get; set; } = false;
     public bool AllowOnlineConsultation { get; set; } = false;

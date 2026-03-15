@@ -39,5 +39,6 @@ public static class EgyptGovernorates
 
 
     public static bool IsValid(string governorate)
-        => !string.IsNullOrWhiteSpace(governorate) && All.Contains(governorate);
+        => !string.IsNullOrWhiteSpace(governorate)
+           && All.Any(g => g.Equals(governorate, StringComparison.OrdinalIgnoreCase));
 }
