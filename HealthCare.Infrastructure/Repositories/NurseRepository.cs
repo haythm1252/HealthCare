@@ -20,13 +20,15 @@ public class NurseRepository(ApplicationDbContext context) : BaseRepository<Nurs
 
     public async Task<PagedList<NurseResponse>> GetNursesWithFiltersAsync(GetNursesQuery request, CancellationToken cancellationToken)
     {
-        var query = _context.Nurses.AsNoTracking().AsQueryable();
+        var query = _context.Nurses
+            .AsNoTracking()
+            .Where(n => !n.User.IsDisabled);
 
         if (!string.IsNullOrWhiteSpace(request.Search))
             query = query.Where(n => n.User.Name.Contains(request.Search));
 
         if (!string.IsNullOrWhiteSpace(request.City))
-            query = query.Where(l => EF.Functions.Like(l.User.City, $"%{request.City}%"));
+            query = query.Where(n => n.User.City.Contains(request.City));
 
         if (request.MinRate.HasValue)
             query = query.Where(n => n.Rating >= request.MinRate.Value);

@@ -1,10 +1,16 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
+using HealthCare.Application.Features.Doctors.Commands.UpdateConsultationSettings;
+using HealthCare.Application.Features.Doctors.Contracts;
 using HealthCare.Application.Features.Doctors.Queries.GetDoctors;
+using HealthCare.Application.Features.Doctors.Queries.GetSchedule;
 using HealthCare.Application.Features.Labs.Commands.UpdateProfile;
+using HealthCare.Application.Features.Labs.Commands.UpdateSchedule;
 using HealthCare.Application.Features.Labs.Contracts;
 using HealthCare.Application.Features.Labs.Queries.GetLabs;
-using HealthCare.Application.Features.Labs.Queries.LabProfile; 
+using HealthCare.Application.Features.Labs.Queries.GetLabSchedule;
+using HealthCare.Application.Features.Labs.Queries.LabProfile;
+using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +29,27 @@ public class LabsController(ISender mediatr) : ControllerBase
     {
         var result = await _mediatr.Send(query, cancellationToken);
         return Ok(result);
+    }
+
+    [Authorize(Roles = DefaultRoles.Lab)]
+    [HttpGet("me/schedule")]
+    public async Task<IActionResult> GetSchedule(CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(new LabScheduleQuery(User.GetUserId()!), cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+    }
+
+    [Authorize(Roles = DefaultRoles.Lab)]
+    [HttpPut("me/schedule")]
+    public async Task<IActionResult> UpdateSchedule([FromBody] UpdateLabScheduleRequest request, CancellationToken cancellationToken)
+    {
+        var command = request.Adapt<UpdateLabScheduleCommand>() with
+        {
+            UserId = User.GetUserId()!
+        };
+
+        var result = await _mediatr.Send(command, cancellationToken);
+        return result.IsSuccess ? NoContent() : result.ToProblem();
     }
 
     [Authorize(Roles = DefaultRoles.Lab)]

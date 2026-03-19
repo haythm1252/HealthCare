@@ -8,6 +8,6 @@ public class DoctorSlotConfigurations : IEntityTypeConfiguration<DoctorSlot>
 {
     public void Configure(EntityTypeBuilder<DoctorSlot> builder)
     {
-        builder.Property(x => x.DurationInMinutes).IsRequired();
+        builder.HasIndex(x => new { x.DoctorId, x.Date, x.StartTime }).IsUnique();
     }
 }

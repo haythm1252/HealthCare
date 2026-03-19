@@ -24,6 +24,11 @@ public class BaseRepository<T>(ApplicationDbContext context) : IBaseRepository<T
         await _dbSet.AddAsync(entity, cancellationToken);
         return entity;
     }
+    public async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    {
+        await _dbSet.AddRangeAsync(entities, cancellationToken);
+        return entities;
+    }
 
     public Task<bool> AnyAsync(Expression<Func<T, bool>> criteria, CancellationToken cancellationToken = default)
     {

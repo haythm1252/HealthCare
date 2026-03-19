@@ -10,7 +10,7 @@ public sealed class NurseShift : BaseEntity
     public DateOnly Date { get; set; }
     public TimeOnly StartTime { get; set; }
     public TimeOnly EndTime { get; set; }
-
+    public bool IsBooked { get; set; }
     public Guid NurseId { get; set; }
     public Nurse Nurse { get; set; } = default!;
 

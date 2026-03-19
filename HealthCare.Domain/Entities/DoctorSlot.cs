@@ -7,8 +7,10 @@ namespace HealthCare.Domain.Entities;
 
 public sealed class DoctorSlot : BaseEntity
 {
-    public DateTime StartDate { get; set; }
-    public int DurationInMinutes { get; set; }
+
+    public DateOnly Date { get; set; }
+    public TimeOnly StartTime { get; set; }
+    public TimeOnly EndTime { get; set; }   
     public bool IsBooked { get; set; } = false;
 
     public Guid DoctorId { get; set; }

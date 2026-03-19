@@ -1,4 +1,5 @@
-﻿using HealthCare.Application.Features.Nurses.Contracts;
+﻿using HealthCare.Application.Features.Nurses.Commands.UpdatePricing;
+using HealthCare.Application.Features.Nurses.Contracts;
 using HealthCare.Domain.Users;
 using Mapster;
 
@@ -16,5 +17,9 @@ internal class NurseMappingConfig : IRegister
             .Map(dest => dest.Address, src => src.User.Address)
             .Map(dest => dest.AddressUrl, src => src.User.AddressUrl)
             .Map(dest => dest.Gender, src => src.User.Gender);
+
+
+        config.NewConfig<UpdateNursePricingCommand, Nurse>()
+            .Ignore(dest => dest.UserId);
     }
 }

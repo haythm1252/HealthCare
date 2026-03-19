@@ -19,7 +19,9 @@ public class LabRepository(ApplicationDbContext context) : BaseRepository<Lab>(c
 
     public async Task<PagedList<LabResponse>> GetLabsWithFiltersAsync(GetLabsQuery request, CancellationToken cancellationToken)
     {
-        var query = _context.Labs.AsNoTracking().AsQueryable();
+        var query = _context.Labs
+            .AsNoTracking()
+            .Where(l => !l.User.IsDisabled);
 
         if (request.TestId.HasValue)
             query = query.Where(l => l.LabTests.Any(lt => lt.TestId == request.TestId.Value));
@@ -28,7 +30,7 @@ public class LabRepository(ApplicationDbContext context) : BaseRepository<Lab>(c
             query = query.Where(l => l.User.Name.Contains(request.Search));
 
         if(!string.IsNullOrWhiteSpace(request.City))
-            query = query.Where(l => l.User.City.ToLower().Contains(request.City.ToLower()));
+            query = query.Where(l => l.User.City.Contains(request.City));
 
         if (request.MinRate.HasValue)
             query = query.Where(l => l.Rating >= request.MinRate.Value);

@@ -11,6 +11,5 @@ public class TestConfigurations : IEntityTypeConfiguration<Test>
         builder.Property(x => x.Name).IsRequired().HasMaxLength(200);
         builder.Property(x => x.Description).IsRequired().HasMaxLength(1000);
         builder.Property(x => x.PreRequisites).IsRequired().HasMaxLength(250);
-        builder.Property(x => x.Unit).IsRequired().HasMaxLength(50);
     }
 }

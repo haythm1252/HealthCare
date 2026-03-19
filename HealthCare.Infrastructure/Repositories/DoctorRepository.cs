@@ -21,7 +21,7 @@ public class DoctorRepository(ApplicationDbContext context) : BaseRepository<Doc
     {
         var query = _context.Doctors
             .AsNoTracking()
-            .AsQueryable();
+            .Where(d => !d.User.IsDisabled);
 
         if (request.SpecialityId.HasValue)
             query = query.Where(d => d.SpecialtyId == request.SpecialityId.Value);
@@ -30,7 +30,7 @@ public class DoctorRepository(ApplicationDbContext context) : BaseRepository<Doc
             query = query.Where(d => d.User.Name.Contains(request.Search));
 
         if (!string.IsNullOrEmpty(request.City))
-            query = query.Where(l => EF.Functions.Like(l.User.City, $"%{request.City}%"));
+            query = query.Where(d => d.User.City.Contains(request.City));
 
         if (!string.IsNullOrEmpty(request.AppointmentType))
             switch (request.AppointmentType)
