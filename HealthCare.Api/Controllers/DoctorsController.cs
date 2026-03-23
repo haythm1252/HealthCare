@@ -3,6 +3,7 @@ using HealthCare.Application.Common.Consts;
 using HealthCare.Application.Features.Doctors.Commands.UpdateConsultationSettings;
 using HealthCare.Application.Features.Doctors.Commands.UpdateProfile;
 using HealthCare.Application.Features.Doctors.Contracts;
+using HealthCare.Application.Features.Doctors.Queries.DoctorBookingDetails;
 using HealthCare.Application.Features.Doctors.Queries.DoctorProfile;
 using HealthCare.Application.Features.Doctors.Queries.GetDoctors;
 using HealthCare.Application.Features.Doctors.Queries.GetSchedule;
@@ -28,6 +29,12 @@ namespace HealthCare.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetDetails([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            var result = await _mediatr.Send(new GetDoctorBookingDetailsQuery(id), cancellationToken);
+            return result.IsSuccess ? Ok(result) : result.ToProblem();
+        }
 
         [Authorize(Roles = DefaultRoles.Doctor)]
         [HttpGet("me/schedule")]

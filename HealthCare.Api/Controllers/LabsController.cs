@@ -2,6 +2,7 @@
 using HealthCare.Application.Common.Consts;
 using HealthCare.Application.Features.Doctors.Commands.UpdateConsultationSettings;
 using HealthCare.Application.Features.Doctors.Contracts;
+using HealthCare.Application.Features.Doctors.Queries.DoctorBookingDetails;
 using HealthCare.Application.Features.Doctors.Queries.GetDoctors;
 using HealthCare.Application.Features.Doctors.Queries.GetSchedule;
 using HealthCare.Application.Features.Labs.Commands.UpdateProfile;
@@ -9,6 +10,7 @@ using HealthCare.Application.Features.Labs.Commands.UpdateSchedule;
 using HealthCare.Application.Features.Labs.Contracts;
 using HealthCare.Application.Features.Labs.Queries.GetLabs;
 using HealthCare.Application.Features.Labs.Queries.GetLabSchedule;
+using HealthCare.Application.Features.Labs.Queries.LabBookingDetails;
 using HealthCare.Application.Features.Labs.Queries.LabProfile;
 using Mapster;
 using MediatR;
@@ -29,6 +31,13 @@ public class LabsController(ISender mediatr) : ControllerBase
     {
         var result = await _mediatr.Send(query, cancellationToken);
         return Ok(result);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetDetails([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(new GetLabBookingDetailsQuery(id), cancellationToken);
+        return result.IsSuccess ? Ok(result) : result.ToProblem();
     }
 
     [Authorize(Roles = DefaultRoles.Lab)]

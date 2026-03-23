@@ -1,5 +1,6 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
+using HealthCare.Application.Features.Doctors.Queries.DoctorBookingDetails;
 using HealthCare.Application.Features.Doctors.Queries.GetDoctors;
 using HealthCare.Application.Features.Labs.Commands.UpdateSchedule;
 using HealthCare.Application.Features.Labs.Contracts;
@@ -9,6 +10,7 @@ using HealthCare.Application.Features.Nurses.Commands.UpdateProfile;
 using HealthCare.Application.Features.Nurses.Contracts;
 using HealthCare.Application.Features.Nurses.Queries.GetNurses;
 using HealthCare.Application.Features.Nurses.Queries.GetShcedule;
+using HealthCare.Application.Features.Nurses.Queries.NurseBookingDetails;
 using HealthCare.Application.Features.Nurses.Queries.NurseProfile;
 using Mapster;
 using MediatR;
@@ -30,6 +32,14 @@ public class NursesController(ISender mediatr) : ControllerBase
         var result = await _mediatr.Send(query, cancellationToken);
         return Ok(result);
     }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetDetails([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(new GetNurseBookingDetailsQuery(id), cancellationToken);
+        return result.IsSuccess ? Ok(result) : result.ToProblem();
+    }
+
 
     [Authorize(Roles = DefaultRoles.Nurse)]
     [HttpGet("me/schedule")]

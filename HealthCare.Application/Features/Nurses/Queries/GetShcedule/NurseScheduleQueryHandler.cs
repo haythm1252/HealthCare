@@ -20,6 +20,7 @@ public class NurseScheduleQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler
     {
         var nurseSechdule = await _unitOfWork.Nurses.AsQueryable()
             .AsNoTracking()
+            .AsSplitQuery()
             .Where(n => n.UserId == request.UserId)
             .Select(n => new 
             {

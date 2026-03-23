@@ -12,7 +12,7 @@ public static class DoctorSlotsErrors
         new("DoctorSlot.SlotEndDateExceeded", "Cannot generate slots beyond 30 days from today.", 400);
 
     public static readonly Error NotFound =
-        new("DoctorSlot.NotFound", "DoctorSlot is Not Found", 400);
+        new("DoctorSlot.NotFound", "DoctorSlot is Not Found", 404);
 
     public static readonly Error DeleteBookedSlot =
         new("DoctorSlot.DeleteBookedSlot", "Cannot delete a slot that already booked by patients.", 400);
