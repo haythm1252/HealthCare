@@ -4,9 +4,8 @@ using System.Text;
 
 namespace HealthCare.Domain.Enums;
 
-public enum TestResultStatus
+public enum NurseServiceType
 {
-    Pending,
-    InProgress,
-    Completed
+    QuickVisit,
+    HourlyStay
 }

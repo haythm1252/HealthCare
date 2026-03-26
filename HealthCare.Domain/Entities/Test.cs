@@ -11,4 +11,7 @@ public sealed class Test : BaseEntity
     public string PreRequisites { get; set; } = string.Empty;
     public ICollection<LabTest> LabTests { get; set; } = [];
     public ICollection<TestResult> TestResults { get; set; } = [];
+    public ICollection<DoctorAppointmentTest> DoctorAppointmentTests { get; set; } = [];
+
+
 }

@@ -4,6 +4,7 @@ using HealthCare.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthCare.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260324124506_EditNurseAppointment")]
+    partial class EditNurseAppointment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -114,6 +117,9 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.Property<string>("Prescriptions")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RequiredTests")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -129,41 +135,6 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("DoctorAppointments");
-                });
-
-            modelBuilder.Entity("HealthCare.Domain.Entities.DoctorAppointmentTest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("DoctorAppointmentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<Guid>("TestId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DoctorAppointmentId");
-
-                    b.HasIndex("TestId");
-
-                    b.ToTable("DoctorAppointmentTests");
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.DoctorSlot", b =>
@@ -377,7 +348,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("Hours")
+                    b.Property<int>("Hours")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
@@ -1182,25 +1153,6 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.Navigation("DoctorSlot");
 
                     b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("HealthCare.Domain.Entities.DoctorAppointmentTest", b =>
-                {
-                    b.HasOne("HealthCare.Domain.Entities.DoctorAppointment", "DoctorAppointment")
-                        .WithMany()
-                        .HasForeignKey("DoctorAppointmentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("HealthCare.Domain.Entities.Test", "Test")
-                        .WithMany()
-                        .HasForeignKey("TestId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("DoctorAppointment");
-
-                    b.Navigation("Test");
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.DoctorSlot", b =>

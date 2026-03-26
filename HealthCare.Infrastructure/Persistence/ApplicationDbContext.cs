@@ -32,6 +32,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<NurseShift> NurseShifts => Set<NurseShift>();
     public DbSet<EmailOtp> EmailOtps => Set<EmailOtp>();
+    public DbSet<DoctorAppointmentTest> DoctorAppointmentTests => Set<DoctorAppointmentTest>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

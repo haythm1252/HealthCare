@@ -29,6 +29,7 @@ public class GetLabBookingDetailsQueryHandler(IUnitOfWork unitOfWork)
                 l.User.City,
                 l.User.Address,
                 l.User.AddressUrl,
+                l.User.PhoneNumber!,
                 l.Rating,
                 l.RatingsCount,
                 l.HomeVisitFee,
@@ -39,6 +40,7 @@ public class GetLabBookingDetailsQueryHandler(IUnitOfWork unitOfWork)
 
                 l.LabTests.Select(lt => new LabTestResponse(
                     lt.Id,
+                    lt.TestId,
                     lt.Test.Name,
                     lt.Test.Description,
                     lt.Test.PreRequisites,

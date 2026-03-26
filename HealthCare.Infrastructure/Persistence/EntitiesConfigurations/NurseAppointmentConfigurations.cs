@@ -15,7 +15,12 @@ public class NurseAppointmentConfigurations : IEntityTypeConfiguration<NurseAppo
             .HasConversion<string>()
             .HasMaxLength(20);
 
-        builder.Property(x => x.Fee).HasPrecision(18, 2);
+
+        builder.Property(x => x.ServiceType)
+            .HasConversion<string>()
+            .HasMaxLength(30);
+
+        builder.Property(x => x.TotalFee).HasPrecision(18, 2);
 
         
     }

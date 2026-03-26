@@ -15,7 +15,6 @@ public class AddLabTestCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<
     public async Task<Result<LabTestResponse>> Handle(AddLabTestCommand request, CancellationToken cancellationToken)
     {
         var labId = await _unitOfWork.Labs.AsQueryable()
-            .AsNoTracking()
             .Where(l => l.UserId == request.UserId)
             .Select(l => l.Id)
             .SingleOrDefaultAsync(cancellationToken);
@@ -24,12 +23,16 @@ public class AddLabTestCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<
             return Result.Failure<LabTestResponse>(UserErrors.NotFound);
 
         var test = await _unitOfWork.Tests.AsQueryable()
-            .AsNoTracking()
             .Where(l => l.Id == request.TestId)
             .SingleOrDefaultAsync(cancellationToken);
 
         if(test is null)
             return Result.Failure<LabTestResponse>(TestErrros.NotFound);
+
+        var isAddedAlready = await _unitOfWork.LabTests.AnyAsync(lt => lt.TestId == request.TestId, cancellationToken);
+        if(isAddedAlready)
+            return Result.Failure<LabTestResponse>(new Error("LabTest.AlreadyExist",
+                "the test you want to add is already exist", 409));
 
         var labTest = new Domain.Entities.LabTest
         {
@@ -44,6 +47,7 @@ public class AddLabTestCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<
 
         var response = new LabTestResponse(
                 labTest.Id,
+                test.Id,
                 test.Name,
                 test.Description,
                 test.PreRequisites,

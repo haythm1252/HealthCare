@@ -6,6 +6,7 @@ namespace HealthCare.Application.Features.LabTest.Contracts;
 
 public record LabTestResponse(
     Guid Id,
+    Guid TestId,
     string Name,
     string Description,
     string PreRequisites,

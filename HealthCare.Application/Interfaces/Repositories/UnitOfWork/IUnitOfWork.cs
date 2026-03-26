@@ -28,6 +28,7 @@ public interface IUnitOfWork : IDisposable
     INurseShiftRepository NurseShifts { get; }
     IEmailOtpRepository EmailOtps { get; }
     IUserRepository Users { get; }
+    IDoctorAppointmentTestRepository DoctorAppointmentTests { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

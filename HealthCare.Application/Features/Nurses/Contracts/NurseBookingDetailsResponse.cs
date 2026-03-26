@@ -12,6 +12,7 @@ public record NurseBookingDetailsResponse(
     string Name,
     string Bio,
     string City,
+    string PhoneNumber,
     Gender Gender,
     decimal Rating,
     int RatingsCount,

@@ -15,6 +15,7 @@ public record LabBookingDetailsResponse(
     string City,
     string Address,
     string? AddressUrl,
+    string PhoneNumber,
     decimal Rating,
     int RatingsCount,
     decimal HomeVisitFee,

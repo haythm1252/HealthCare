@@ -11,7 +11,9 @@ public sealed class NurseAppointment : BaseEntity
     public string? Notes { get; set; }
     public string Address { get; set; } = string.Empty;
     public AppointmentStatus Status { get; set; }
-    public decimal Fee { get; set; }
+    public NurseServiceType ServiceType { get; set; }
+    public int? Hours { get; set; }
+    public decimal TotalFee { get; set; }
 
     public Guid NurseId { get; set; }
     public Nurse Nurse { get; set; } = default!;

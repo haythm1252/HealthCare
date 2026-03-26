@@ -16,6 +16,7 @@ public record DoctorBookingDetailsResponse(
     string City,
     string Address,
     string? AddressUrl,
+    string PhoneNumber,
     Gender Gender,
     decimal Rating,
     int RatingsCount,

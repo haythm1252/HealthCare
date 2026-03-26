@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Features\Auth\Queries\" />
+    <Folder Include="Features\NurseAppointments\Queries\" />
     <Folder Include="Features\Specialities\Commands\" />
   </ItemGroup>
 

@@ -9,7 +9,7 @@ namespace HealthCare.Application.Features.Labs.Queries.GetLabs;
 
 public record GetLabsQuery
 (
-    Guid? TestId,
+    IEnumerable<Guid>? TestIds,
     string? Search,
     string? City,
     decimal? MinRate,

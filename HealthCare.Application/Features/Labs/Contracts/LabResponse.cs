@@ -11,5 +11,9 @@ public record LabResponse
     string Address,
     decimal Rating,
     int RatingsCount,
-    string ProfilePictureUrl
+    string ProfilePictureUrl,
+
+    int? MatchedTestsCount = null,
+    int? TotalRequestedTests = null,
+    List<string>? MatchedTestsNames = null
 );

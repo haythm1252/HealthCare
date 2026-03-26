@@ -23,10 +23,11 @@ public class LabRepository(ApplicationDbContext context) : BaseRepository<Lab>(c
             .AsNoTracking()
             .Where(l => !l.User.IsDisabled);
 
-        if (request.TestId.HasValue)
-            query = query.Where(l => l.LabTests.Any(lt => lt.TestId == request.TestId.Value));
+        var hasTests = request.TestIds?.Any() == true;
+        if (hasTests)
+            query = query.Where(l => l.LabTests.Any(lt => request.TestIds!.Contains(lt.TestId)));
 
-        if(!string.IsNullOrWhiteSpace(request.Search))
+        if (!string.IsNullOrWhiteSpace(request.Search))
             query = query.Where(l => l.User.Name.Contains(request.Search));
 
         if(!string.IsNullOrWhiteSpace(request.City))
@@ -35,13 +36,13 @@ public class LabRepository(ApplicationDbContext context) : BaseRepository<Lab>(c
         if (request.MinRate.HasValue)
             query = query.Where(l => l.Rating >= request.MinRate.Value);
 
-        if (!string.IsNullOrEmpty(request.Sort))
-            query = request.Sort switch
-            { 
-                FiltersOptions.RateAsc => query.OrderBy(d => d.Rating),
-                FiltersOptions.RateDesc => query.OrderByDescending(d => d.Rating),
-                _ => query
-            };
+        if(hasTests)
+            query = query.OrderByDescending(l => l.LabTests.Count(lt => request.TestIds!.Contains(lt.TestId)));
+
+        else if (!string.IsNullOrEmpty(request.Sort))
+            query = request.Sort == FiltersOptions.RateAsc
+                ? query.OrderBy(l => l.Rating)
+                : query.OrderByDescending(l => l.Rating);
 
         return await query
             .Select(l => new LabResponse(
@@ -50,7 +51,13 @@ public class LabRepository(ApplicationDbContext context) : BaseRepository<Lab>(c
                 l.User.Address,
                 l.Rating,
                 l.RatingsCount,
-                l.ProfilePictureUrl
-            )).ToPagedListAsync(request.Page, request.PageSize, cancellationToken);
+                l.ProfilePictureUrl,
+
+                request.TestIds != null ? l.LabTests.Count(lt => request.TestIds.Contains(lt.TestId)) : null,
+                request.TestIds != null ? request.TestIds.Count() : null,
+                request.TestIds != null ? l.LabTests.Where(lt => request.TestIds.Contains(lt.TestId))
+                                            .Select(lt => lt.Test.Name).ToList() : null
+            ))
+            .ToPagedListAsync(request.Page, request.PageSize, cancellationToken);
     }
 }

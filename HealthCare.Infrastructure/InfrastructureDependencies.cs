@@ -54,6 +54,7 @@ public static class InfrastructureDependencies
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IFileService, CloudinaryService>();
             services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
 
             return services;

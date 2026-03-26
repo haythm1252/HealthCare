@@ -14,7 +14,6 @@ public sealed class DoctorAppointment : BaseEntity
     public decimal Fee { get; set; }
     public string? Diagnosis { get; set; } 
     public string? Prescriptions { get; set; } 
-    public string? RequiredTests { get; set; }
     public string? Address { get; set; }
     public PaymentType PaymentType { get; set; }
 
@@ -30,4 +29,6 @@ public sealed class DoctorAppointment : BaseEntity
     public Patient Patient { get; set; } = default!;
     public Guid DoctorId { get; set; }
     public Doctor Doctor { get; set; } = default!;
+
+    public ICollection<DoctorAppointmentTest> DoctorAppointmentTests { get; set; } = [];
 }
