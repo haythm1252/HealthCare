@@ -1,6 +1,8 @@
 ﻿using HealthCare.Application.Interfaces.Repositories;
 using HealthCare.Application.Interfaces.Repositories.UnitOfWork;
 using HealthCare.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HealthCare.Infrastructure.Repositories.UnitOfWork;
 
@@ -53,6 +55,9 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         => context.SaveChangesAsync(cancellationToken);
+
+    public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct = default)
+    => await context.Database.BeginTransactionAsync(ct);
 
     public void Dispose() => context.Dispose();
 }

@@ -44,6 +44,11 @@ public static class ApplicationDependencies
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
+            services.AddOptions<PaymobSettings>()
+                .Bind(configuration.GetSection(PaymobSettings.SectionName))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+
             return services;
         }
     }

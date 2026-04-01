@@ -54,7 +54,6 @@ public class BookNurseAppointmentCommandHandler(IUnitOfWork unitOfWork, INotific
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var shift = await _unitOfWork.NurseShifts.AsQueryable()
             .Where(ns => ns.Id == request.ShiftId && ns.NurseId == request.NurseId && ns.Date >= today)
-            .Select(ns => new { ns.Date, ns.StartTime, ns.EndTime})
             .SingleOrDefaultAsync(cancellationToken);
 
         if (shift is null)
@@ -94,8 +93,10 @@ public class BookNurseAppointmentCommandHandler(IUnitOfWork unitOfWork, INotific
             TotalFee = totalFee
         };
 
-        // save it in database and see if it saved or not
+        // save it in database and update the shift and see if it saved or not
         await _unitOfWork.NurseAppointments.AddAsync(appointment, cancellationToken);
+        shift.IsBooked = true;
+
         var result = await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         if (result <= 0)

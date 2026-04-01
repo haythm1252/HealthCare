@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HealthCare.Api.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/lab-appointments")]
 [ApiController]
 public class LabAppointmentsController(ISender mediatr) : ControllerBase
 {

@@ -58,7 +58,8 @@ public class BookLabAppointmentCommandHandler(IUnitOfWork unitOfWork, INotificat
 
         //dose the patient have already an appointment in this day and not canceled
         var alreadyBooked = await _unitOfWork.LabAppointments.AsQueryable()
-            .AnyAsync(a => a.PatientId == patient.Id && a.Date == request.Date && a.Status != AppointmentStatus.Cancelled, cancellationToken);
+            .AnyAsync(a => a.PatientId == patient.Id && a.LabId == lab.Id 
+                && a.Date == request.Date && a.Status != AppointmentStatus.Cancelled, cancellationToken);
 
         if (alreadyBooked)
             return Result.Failure<BookLabAppointmentResponse>(LabAppointmentErrors.DuplicateBooking);

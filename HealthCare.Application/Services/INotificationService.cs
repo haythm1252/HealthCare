@@ -13,4 +13,12 @@ public interface INotificationService
         string patientName,
         string appointmentDate,
         string serviceName);
+
+    Task SendPaymentConfrimationNotificationAsync(string patientEmail,
+        string patientName,
+        string doctorName,
+        DateOnly appointmentDate,
+        TimeOnly startTime,
+        TimeOnly endTime,
+        string serviceName);
 }

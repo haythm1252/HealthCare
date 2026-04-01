@@ -11,8 +11,14 @@ public class DoctorAppointmentConfigurations : IEntityTypeConfiguration<DoctorAp
     {
 
         builder.HasOne(x => x.DoctorSlot)
-            .WithOne(x => x.DoctorAppointment)
-            .HasForeignKey<DoctorAppointment>(x => x.DoctorSlotId);
+                .WithMany()
+                .HasForeignKey(x => x.DoctorSlotId);
+
+        //  Define the Unique Constraint
+        // This makes the SlotId unique ONLY for appointments that aren't cancelled.
+        builder.HasIndex(x => x.DoctorSlotId)
+            .HasFilter("[Status] != 'Cancelled'")
+            .IsUnique();
 
         builder.Property(x => x.Status)
             .HasConversion<string>()
