@@ -37,7 +37,7 @@ public class LabsController(ISender mediatr) : ControllerBase
     public async Task<IActionResult> GetDetails([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(new GetLabBookingDetailsQuery(id), cancellationToken);
-        return result.IsSuccess ? Ok(result) : result.ToProblem();
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
     }
 
     [Authorize(Roles = DefaultRoles.Lab)]

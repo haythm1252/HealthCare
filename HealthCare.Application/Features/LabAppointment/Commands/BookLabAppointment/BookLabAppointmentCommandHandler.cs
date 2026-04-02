@@ -35,12 +35,17 @@ public class BookLabAppointmentCommandHandler(IUnitOfWork unitOfWork, INotificat
 
         //dose the lab exist 
         var lab = await _unitOfWork.Labs.AsQueryable()
+            .AsNoTracking() 
             .Where(l => l.Id == request.LabId)
-            .Select(l => new { l.Id, l.User.Email, l.User.Name, l.User.PhoneNumber, l.User.Address, l.HomeVisitFee })
+            .Select(l => new { l.Id, l.User.Email, l.User.Name, l.User.PhoneNumber, l.User.Address, l.HomeVisitFee, l.WorkingDays})
             .SingleOrDefaultAsync(cancellationToken);
 
         if (lab is null)
             return Result.Failure<BookLabAppointmentResponse>(LabErrors.NotFound);
+
+        // Check if the lab is open on the requested date or not
+        if (!IsLabOpenOnDate(lab.WorkingDays, request.Date))
+            return Result.Failure<BookLabAppointmentResponse>(LabAppointmentErrors.ClosedOnSelectedDay);
 
         // dose the lab contain those tests 
         var requestedTests = await _unitOfWork.LabTests.AsQueryable()
@@ -118,5 +123,22 @@ public class BookLabAppointmentCommandHandler(IUnitOfWork unitOfWork, INotificat
         );
 
         return Result.Success(response);
+    }
+
+
+
+    private bool IsLabOpenOnDate(WorkingDays workingDays, DateOnly requestedDate)
+    {
+        return requestedDate.DayOfWeek switch
+        {
+            DayOfWeek.Saturday => workingDays.IsSaturdayOpen,
+            DayOfWeek.Sunday => workingDays.IsSundayOpen,
+            DayOfWeek.Monday => workingDays.IsMondayOpen,
+            DayOfWeek.Tuesday => workingDays.IsTuesdayOpen,
+            DayOfWeek.Wednesday => workingDays.IsWednesdayOpen,
+            DayOfWeek.Thursday => workingDays.IsThursdayOpen,
+            DayOfWeek.Friday => workingDays.IsFridayOpen,
+            _ => false
+        };
     }
 }

@@ -10,6 +10,9 @@ public static class LabAppointmentErrors
     public static readonly Error TestsNotExisit =
         new("LabAppointment.TestsNotExisit", "The selected tests is either not exist or this lab dosen't support it.", 400);
 
+    public static readonly Error ClosedOnSelectedDay =
+        new("LabAppointment.ClosedOnSelectedDay", "The lab is closed on the selected date.", 409);
+
     public static readonly Error NotSupportHome =
     new("LabAppointment.NotSupportHome", "Some of the selected tests not support HomeVisit Service", 400);
 

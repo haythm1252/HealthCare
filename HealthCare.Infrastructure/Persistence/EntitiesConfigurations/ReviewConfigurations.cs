@@ -8,8 +8,7 @@ public class ReviewConfigurations : IEntityTypeConfiguration<Review>
 {
     public void Configure(EntityTypeBuilder<Review> builder)
     {
-        builder.Property(x => x.Rating).HasPrecision(3, 2);
-        builder.Property(x => x.Comment).HasMaxLength(1000);
+        builder.Property(x => x.Comment).HasMaxLength(500);
 
         builder.Property(x => x.TargetType)
             .HasConversion<string>()
