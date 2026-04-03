@@ -8,5 +8,7 @@ public static class UserExtentions
     {
         public string? GetUserId()
             => user.FindFirstValue(ClaimTypes.NameIdentifier);
+        public string? GetRole()
+            => user.FindFirstValue(ClaimTypes.Role);
     }
 }

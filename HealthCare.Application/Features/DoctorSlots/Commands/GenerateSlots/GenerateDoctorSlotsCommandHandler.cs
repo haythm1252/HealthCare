@@ -35,16 +35,16 @@ public class GenerateDoctorSlotsCommandHandler(IUnitOfWork unitOfWork)
                       && ds.Date >= request.StartDate
                       && ds.Date <= effectiveEndDate
                       && !ds.IsBooked
-                      && ds.StartTime < requestedEndTime
+                      && !ds.DoctorAppointments.Any()           // ds.DoctorAppointments.Any() i write this because if the slot not booked but might have cancelled appointment i dont want to delete this slot because the doctor might want to create slot in this time again so i should not delete it
+                      && ds.StartTime < requestedEndTime        // also it gives db error if the slot have cancelled appointment and i try to delete it because of the relation between slot and appointment so i should not delete it
                       && ds.EndTime > request.StartTime)
             .ExecuteDeleteAsync(cancellationToken);
 
-        // get the booked slots to not create slot in the same time
+        // get the booked slots to not create slot in the same time NOTE: i dont check that slot booked or not cuz i already delete all unbooked slots in the time in the during the time in the reqeust so all remaining slots in this time must be booked or have cancelled appointment and i should not create slot in this time
         var bookedSlots = await _unitOfWork.DoctorSlots.AsQueryable()
             .Where(ds => ds.DoctorId == doctorId
                       && ds.Date >= request.StartDate
                       && ds.Date <= effectiveEndDate
-                      && ds.IsBooked
                       && ds.StartTime < requestedEndTime
                       && ds.EndTime > request.StartTime)
             .ToListAsync(cancellationToken);

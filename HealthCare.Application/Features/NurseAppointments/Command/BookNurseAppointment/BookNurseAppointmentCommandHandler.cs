@@ -59,8 +59,15 @@ public class BookNurseAppointmentCommandHandler(IUnitOfWork unitOfWork, INotific
         if (shift is null)
             return Result.Failure<BookNurseAppointmentResponse>(NurseAppointmentErrors.ShiftNotAvailable);
 
+        if (shift.Date.ToDateTime(shift.EndTime) < DateTime.UtcNow)
+            return Result.Failure<BookNurseAppointmentResponse>(NurseAppointmentErrors.PastShift);
+
+        if (request.StartTime < shift.StartTime || request.StartTime > shift.EndTime)
+            return Result.Failure<BookNurseAppointmentResponse>(NurseAppointmentErrors.OutsideShift);
+
         var isBooked = await _unitOfWork.NurseAppointments
-            .AnyAsync(na => na.PatientId == patient.Id && na.NurseId == request.NurseId && na.NurseShiftId == request.ShiftId && na.Status != AppointmentStatus.Cancelled);
+            .AnyAsync(na => na.PatientId == patient.Id && na.NurseId == request.NurseId && na.NurseShiftId == request.ShiftId 
+            && na.Status != AppointmentStatus.Cancelled, cancellationToken);
 
         if (isBooked)
             return Result.Failure<BookNurseAppointmentResponse>(NurseAppointmentErrors.DuplicateBooking);
@@ -84,7 +91,7 @@ public class BookNurseAppointmentCommandHandler(IUnitOfWork unitOfWork, INotific
             PatientId = patient.Id,
             NurseId = request.NurseId,
             NurseShiftId = request.ShiftId,
-
+            StartTime = request.StartTime,
             Notes = request.Notes,
             Address = request.Address,
             Status = AppointmentStatus.Pending,
@@ -117,6 +124,7 @@ public class BookNurseAppointmentCommandHandler(IUnitOfWork unitOfWork, INotific
             nurse.Name,
             nurse.PhoneNumber!,
             shift.Date,
+            appointment.StartTime,
             request.Address,
             appointment.ServiceType,
             appointment.Hours,

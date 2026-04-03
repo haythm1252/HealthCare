@@ -11,6 +11,7 @@ public record BookNurseAppointmentResponse(
     string NurseName,
     string NursePhoneNumber,
     DateOnly Date,
+    TimeOnly Time,
     string Address,
     NurseServiceType ServiceType,
     int? Hours,

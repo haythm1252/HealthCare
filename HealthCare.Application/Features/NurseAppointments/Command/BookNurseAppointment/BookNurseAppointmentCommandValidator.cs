@@ -25,6 +25,9 @@ public class BookNurseAppointmentCommandValidator : AbstractValidator<BookNurseA
             .IsEnumName(typeof(NurseServiceType), caseSensitive: false)
             .WithMessage("Invalid service type. Please choose 'QuickVisit' or 'HourlyStay'.");
 
+        RuleFor(x => x.StartTime)
+            .NotEmpty();
+
         RuleFor(x => x.Hours)
             .NotEmpty()
             .GreaterThan(0)

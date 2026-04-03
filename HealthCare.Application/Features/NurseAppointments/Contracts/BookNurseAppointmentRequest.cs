@@ -8,6 +8,7 @@ public record BookNurseAppointmentRequest(
     Guid NurseId,
     Guid ShiftId,
     string? Notes,
+    TimeOnly StartTime,
     string Address,
     string ServiceType,
     int? Hours

@@ -13,6 +13,12 @@ public static class NurseAppointmentErrors
     public static readonly Error DuplicateBooking =
         new ("NurseAppointment.DuplicateBooking", "You have already submitted a booking request for this specific shift.", 409);
 
+    public static readonly Error PastShift =
+        new("NurseShifts.PastShift", "This nurse shift has already started or passed in UTC time.", 400);
+
+    public static readonly Error OutsideShift =
+        new("NurseAppointment.OutsideShift", "The appointment time is outside the nurse's working hours.", 400);
+
     public static readonly Error SaveFailed =
         new("NurseAppointment.SaveFailed", "An error occurred while saving the appointment. Please try again.", 500);
 }

@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Text;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Error = HealthCare.Application.Common.Result.Error;
 
 namespace HealthCare.Application.Features.DoctorAppointments.Commands.BookDoctorAppointment;
 
@@ -67,6 +68,12 @@ public class BookDoctorAppointmentCommandHandler(
 
         if (slot is null)
             return Result.Failure<BookDoctorAppointmentResponse>(DoctorSlotsErrors.NotFound);
+        
+        if(slot.Date.ToDateTime(slot.StartTime) < DateTime.UtcNow)
+            return Result.Failure<BookDoctorAppointmentResponse>(new Error(
+                "DoctorSlots.PastSlot",
+                "This time slot has already passed.",
+                400));
 
         if (slot.IsBooked)
             return Result.Failure<BookDoctorAppointmentResponse>(DoctorAppointmentErrors.DuplicateBooking);

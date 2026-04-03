@@ -14,7 +14,13 @@ public static class LabAppointmentErrors
         new("LabAppointment.ClosedOnSelectedDay", "The lab is closed on the selected date.", 409);
 
     public static readonly Error NotSupportHome =
-    new("LabAppointment.NotSupportHome", "Some of the selected tests not support HomeVisit Service", 400);
+        new("LabAppointment.NotSupportHome", "Some of the selected tests not support HomeVisit Service", 400);
+
+    public static readonly Error OutsideOperatingHours =
+        new("LabAppointment.OutsideOperatingHours", "The requested time falls outside of the laboratory's operating hours.", 400);
+
+    public static readonly Error PastDate =
+        new("LabAppointment.PastDate", "The selected date is in the past and cannot be booked.", 400);
 
     public static readonly Error DuplicateBooking =
         new("LabAppointment.DuplicateBooking", "You have already submitted an ongoing booking request for this lab in this day " +

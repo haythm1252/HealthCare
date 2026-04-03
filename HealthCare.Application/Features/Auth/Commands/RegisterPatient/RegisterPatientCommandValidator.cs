@@ -18,7 +18,7 @@ public class RegisterPatientCommandValidator : AbstractValidator<RegisterPatient
         // we could make the birth patient need to be adult but maybe a mother registering her child so we will just make sure it's in the past
         RuleFor(x => x.DateOfBirth)
             .NotEmpty()
-            .LessThan(DateOnly.FromDateTime(DateTime.Now)).WithMessage("Birth date must be in the past.");
+            .LessThan(DateOnly.FromDateTime(DateTime.UtcNow)).WithMessage("Birth date must be in the past.");
 
         RuleFor(x => x.City)
             .NotEmpty()

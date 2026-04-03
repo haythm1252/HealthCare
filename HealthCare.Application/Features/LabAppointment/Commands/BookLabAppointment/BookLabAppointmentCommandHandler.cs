@@ -37,7 +37,7 @@ public class BookLabAppointmentCommandHandler(IUnitOfWork unitOfWork, INotificat
         var lab = await _unitOfWork.Labs.AsQueryable()
             .AsNoTracking() 
             .Where(l => l.Id == request.LabId)
-            .Select(l => new { l.Id, l.User.Email, l.User.Name, l.User.PhoneNumber, l.User.Address, l.HomeVisitFee, l.WorkingDays})
+            .Select(l => new { l.Id, l.User.Email, l.User.Name, l.User.PhoneNumber, l.User.Address, l.HomeVisitFee, l.WorkingDays, l.OpeningTime, l.ClosingTime})
             .SingleOrDefaultAsync(cancellationToken);
 
         if (lab is null)
@@ -46,6 +46,12 @@ public class BookLabAppointmentCommandHandler(IUnitOfWork unitOfWork, INotificat
         // Check if the lab is open on the requested date or not
         if (!IsLabOpenOnDate(lab.WorkingDays, request.Date))
             return Result.Failure<BookLabAppointmentResponse>(LabAppointmentErrors.ClosedOnSelectedDay);
+
+        if(request.Date < DateOnly.FromDateTime(DateTime.UtcNow))
+            return Result.Failure<BookLabAppointmentResponse>(LabAppointmentErrors.PastDate);
+
+        if(request.StartTime < lab.OpeningTime || request.StartTime > lab.ClosingTime)
+            return Result.Failure<BookLabAppointmentResponse>(LabAppointmentErrors.OutsideOperatingHours);
 
         // dose the lab contain those tests 
         var requestedTests = await _unitOfWork.LabTests.AsQueryable()
@@ -81,6 +87,7 @@ public class BookLabAppointmentCommandHandler(IUnitOfWork unitOfWork, INotificat
             LabId = lab.Id,
             
             Date = request.Date,
+            StartTime = request.StartTime,
             Notes = request.Notes,
             Address = request.Address,
             TotalFee = totalFee,
@@ -115,6 +122,7 @@ public class BookLabAppointmentCommandHandler(IUnitOfWork unitOfWork, INotificat
             lab.Name,
             lab.PhoneNumber!,
             appointment.Date,
+            appointment.StartTime,
             isHomeVisit ? request.Address! : lab.Address,
             appointment.AppointmentType,
             appointment.TotalFee,

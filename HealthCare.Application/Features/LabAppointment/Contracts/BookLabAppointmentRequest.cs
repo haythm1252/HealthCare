@@ -8,6 +8,7 @@ public record BookLabAppointmentRequest(
     Guid LabId,
     DateOnly Date,
     string AppointmentType,
+    TimeOnly StartTime,
     string? Notes,
     string? Address,
     IEnumerable<Guid> LabTestsIds

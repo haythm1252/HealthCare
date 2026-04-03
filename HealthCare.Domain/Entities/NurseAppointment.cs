@@ -10,6 +10,7 @@ public sealed class NurseAppointment : BaseEntity
 {
     public string? Notes { get; set; }
     public string Address { get; set; } = string.Empty;
+    public TimeOnly StartTime { get; set; } = default;
     public AppointmentStatus Status { get; set; }
     public NurseServiceType ServiceType { get; set; }
     public int? Hours { get; set; }

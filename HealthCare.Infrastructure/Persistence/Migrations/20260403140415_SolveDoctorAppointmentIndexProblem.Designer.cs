@@ -4,6 +4,7 @@ using HealthCare.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthCare.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260403140415_SolveDoctorAppointmentIndexProblem")]
+    partial class SolveDoctorAppointmentIndexProblem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,9 +263,6 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("PatientId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<TimeOnly>("StartTime")
-                        .HasColumnType("time");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -404,9 +404,6 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
-
-                    b.Property<TimeOnly>("StartTime")
-                        .HasColumnType("time");
 
                     b.Property<string>("Status")
                         .IsRequired()

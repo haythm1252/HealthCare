@@ -36,6 +36,9 @@ public class BookLabAppointmentCommandValidator : AbstractValidator<BookLabAppoi
             .When(x => x.AppointmentType.Equals(AppointmentType.HomeVisit.ToString(), StringComparison.OrdinalIgnoreCase))
             .WithMessage("Home address is required for Home Visit appointments.");
 
+        RuleFor(x => x.StartTime)
+            .NotEmpty();    
+
         RuleFor(x => x.LabTestsIds)
             .NotEmpty()
             .WithMessage("You must select at least one lab test to book an appointment.")

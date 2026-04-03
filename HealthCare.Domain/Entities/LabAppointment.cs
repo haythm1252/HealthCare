@@ -1,5 +1,6 @@
 ﻿using HealthCare.Domain.Enums;
 using HealthCare.Domain.Users;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +12,7 @@ public sealed class LabAppointment : BaseEntity
     public DateOnly Date { get; set; }
     public AppointmentStatus Status { get; set; }
     public AppointmentType AppointmentType { get; set; }
+    public TimeOnly StartTime { get; set; } = default;
     public decimal TotalFee { get; set; }
     public string? Notes { get; set; }
     public string? Address { get; set; }

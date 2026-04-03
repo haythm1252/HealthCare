@@ -11,6 +11,7 @@ public record BookLabAppointmentResponse(
     string LabName,
     string LabPhoneNumber,
     DateOnly Date,
+    TimeOnly Time,
     string Address,
     AppointmentType AppointmentType,
     decimal TotalFee,

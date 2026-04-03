@@ -16,4 +16,6 @@ public sealed class DoctorSlot : BaseEntity
     public Guid DoctorId { get; set; }
     public Doctor Doctor { get; set; } = default!;
 
+    public ICollection<DoctorAppointment> DoctorAppointments { get; set; } = [];
+
 }
