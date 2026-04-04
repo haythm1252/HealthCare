@@ -10,10 +10,10 @@ using System.Text;
 
 namespace HealthCare.Application.Features.Labs.Commands.UpdateProfile;
 
-public record UpdateLabProfileCommandHandler(IUnitOfWork unitOfWork, IFileService fileService) : IRequestHandler<UpdateLabProfileCommand, Result>
+public record UpdateLabProfileCommandHandler(IUnitOfWork unitOfWork, ICloudinaryService fileService) : IRequestHandler<UpdateLabProfileCommand, Result>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly IFileService _fileService = fileService;
+    private readonly ICloudinaryService _cloudinaryService = fileService;
     public async Task<Result> Handle(UpdateLabProfileCommand request, CancellationToken cancellationToken)
     {
         var lab = await _unitOfWork.Labs.AsQueryable()
@@ -28,13 +28,13 @@ public record UpdateLabProfileCommandHandler(IUnitOfWork unitOfWork, IFileServic
         {
             using var stream = request.ProfilePicture.OpenReadStream();
 
-            var result = await _fileService.UploadImageAsync(stream, request.ProfilePicture.FileName);
+            var result = await _cloudinaryService.UploadImageAsync(stream, request.ProfilePicture.FileName);
             if (result.IsFailure)
                 return Result.Failure(result.Error);
 
             if (!string.IsNullOrWhiteSpace(lab.ProfilePicturePublicId))
             {
-                var deleteingResult = await _fileService.DeleteImageAsync(lab.ProfilePicturePublicId);
+                var deleteingResult = await _cloudinaryService.DeleteImageAsync(lab.ProfilePicturePublicId);
                 if (deleteingResult.IsFailure)
                     return deleteingResult;
             }

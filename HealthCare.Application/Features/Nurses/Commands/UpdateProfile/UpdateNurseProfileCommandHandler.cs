@@ -11,10 +11,10 @@ using System.Text;
 
 namespace HealthCare.Application.Features.Nurses.Commands.UpdateProfile;
 
-public class UpdateNurseProfileCommandHandler(IUnitOfWork unitOfWork, IFileService fileService) : IRequestHandler<UpdateNurseProfileCommand, Result>
+public class UpdateNurseProfileCommandHandler(IUnitOfWork unitOfWork, ICloudinaryService fileService) : IRequestHandler<UpdateNurseProfileCommand, Result>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly IFileService _fileService = fileService;
+    private readonly ICloudinaryService _cloudinaryService = fileService;
 
     public async Task<Result> Handle(UpdateNurseProfileCommand request, CancellationToken cancellationToken)
     {
@@ -30,13 +30,13 @@ public class UpdateNurseProfileCommandHandler(IUnitOfWork unitOfWork, IFileServi
         {
             using var stream = request.ProfilePicture.OpenReadStream();
 
-            var result = await _fileService.UploadImageAsync(stream, request.ProfilePicture.FileName);
+            var result = await _cloudinaryService.UploadImageAsync(stream, request.ProfilePicture.FileName);
             if (result.IsFailure)
                 return Result.Failure(result.Error);
 
             if (!string.IsNullOrWhiteSpace(nurse.ProfilePicturePublicId))
             { 
-                var deleteingResult = await _fileService.DeleteImageAsync(nurse.ProfilePicturePublicId);
+                var deleteingResult = await _cloudinaryService.DeleteImageAsync(nurse.ProfilePicturePublicId);
                 if (deleteingResult.IsFailure)
                     return Result.Failure(deleteingResult.Error);
             }

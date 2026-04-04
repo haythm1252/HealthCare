@@ -25,5 +25,4 @@ public sealed class Patient : BaseUser
     public ICollection<DoctorAppointment> DoctorAppointments { get; set; } = [];
     public ICollection<NurseAppointment> NurseAppointments { get; set; } = [];
     public ICollection<Chat> Chats { get; set; } = [];
-    public ICollection<Review> Reviews { get; set; } = [];
 }

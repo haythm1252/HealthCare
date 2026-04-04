@@ -28,7 +28,6 @@ public sealed class Doctor : BaseUser
 
     public ICollection<DoctorAppointment> DoctorAppointments { get; set; } = [];
     public ICollection<DoctorSlot> DoctorSlots { get; set; } = [];
-    public ICollection<Review> Reviews { get; set; } = [];
     public ICollection<Chat> Chats { get; set; } = [];
     public ICollection<Post> Posts { get; set; } = [];
 }

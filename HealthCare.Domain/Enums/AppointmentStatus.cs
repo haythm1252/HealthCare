@@ -11,5 +11,6 @@ public enum AppointmentStatus
     Declined,
     Cancelled,
     Completed,
-    NoShow 
+    NoShow,
+    ResultsDone //for lab
 }

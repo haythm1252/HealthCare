@@ -83,6 +83,7 @@ public class UpdateAppointmentFinalStatusCommandHandler(IUnitOfWork unitOfWork) 
     private async Task<Result> HandleLabAppointmentFinalStatus(UpdateAppointmentFinalStatusCommand request, AppointmentStatus status, CancellationToken cancellationToken)
     {
         var appointment = await _unitOfWork.LabAppointments.AsQueryable()
+            .Include(la => la.TestResults)
             .Where(la => la.Id == request.AppointmentId && la.Lab.UserId == request.UserId)
             .SingleOrDefaultAsync(cancellationToken);
 
@@ -100,6 +101,13 @@ public class UpdateAppointmentFinalStatusCommandHandler(IUnitOfWork unitOfWork) 
             return Result.Failure(AppointmentErrors.TooEarlyToFinalize);
 
         appointment.Status = status;
+
+        // make the tests results inprogress if the appointment is completed
+        if (appointment.Status == AppointmentStatus.Completed)
+            foreach (var tr in appointment.TestResults)
+                tr.Status = TestResultStatus.InProgress;
+
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return Result.Success();
     }

@@ -14,7 +14,10 @@ public static class DoctorAppointmentErrors
         new("DoctorAppointment.HomeVisitNotSupported", "The doctor you chose dose Not Allow the HomeVisit Appointment", 400);
 
     public static readonly Error OnlineNotSupported =
-    new("DoctorAppointment.OnlineNotSupported", "The doctor you chose dose Not Allow the Online Appointment", 400);
+        new("DoctorAppointment.OnlineNotSupported", "The doctor you chose dose Not Allow the Online Appointment", 400);
+
+    public static Error TooEarlyToAddDiagnosis =>
+        new("DoctorAppointment.TooEarlyToAddDiagnosis", "You cannot add diagnosis to an appointment before its scheduled time.", 400);
 
     public static readonly Error DuplicateBooking =
         new("DoctorAppointment.DuplicateBooking", "the Doctor slot you select is Already Booked ", 400);

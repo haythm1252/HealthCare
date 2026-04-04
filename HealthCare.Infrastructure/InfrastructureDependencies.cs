@@ -52,7 +52,7 @@ public static class InfrastructureDependencies
 
             services.AddScoped<IAuthService, AuthService>();        
             services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<IFileService, CloudinaryService>();
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IPaymobService, PaymobService>();

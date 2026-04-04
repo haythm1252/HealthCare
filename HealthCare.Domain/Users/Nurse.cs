@@ -20,5 +20,4 @@ public sealed class Nurse : BaseUser
 
     public ICollection<NurseAppointment> NurseAppointments { get; set; } = [];
     public ICollection<NurseShift> NurseShifts { get; set; } = [];
-    public ICollection<Review> Reviews { get; set; } = [];
 }

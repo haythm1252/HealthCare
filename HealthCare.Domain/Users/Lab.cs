@@ -21,6 +21,5 @@ public sealed class Lab : BaseUser
     public ApplicationUser User { get; set; } = default!;
 
     public ICollection<LabAppointment> LabAppointments { get; set; } = [];
-    public ICollection<Review> Reviews { get; set; } = [];
     public ICollection<LabTest> LabTests { get; set; } = [];
 }

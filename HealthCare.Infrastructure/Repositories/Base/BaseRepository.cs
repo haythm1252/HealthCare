@@ -45,7 +45,11 @@ public class BaseRepository<T>(ApplicationDbContext context) : IBaseRepository<T
         _dbSet.Remove(entity);
         return Task.CompletedTask;
     }
-
+    public Task DeleteRange(IEnumerable<T> entities, CancellationToken cancellationToken = default)
+    {
+        _dbSet.RemoveRange(entities);
+        return Task.CompletedTask;
+    }
 
     public Task Update(T entity)
     {

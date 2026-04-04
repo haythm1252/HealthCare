@@ -9,8 +9,8 @@ public sealed class TestResult : BaseEntity
 {
     public decimal? Value { get; set; }
     public string? Summary { get; set; }
-    public string? AttachmentUrl { get; set; }
-    public string? AttachmentPublicId { get; set; }
+    public string? ResultFileUrl { get; set; }
+    public string? ResultFilePublicId { get; set; }
     public TestResultStatus Status { get; set; }
     public DateTime? SubmittedAt { get; set; }
     public Guid TestId { get; set; }

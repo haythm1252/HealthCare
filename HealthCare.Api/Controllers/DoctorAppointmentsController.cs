@@ -1,5 +1,6 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
+using HealthCare.Application.Features.DoctorAppointments.Commands.AddDiagnosis;
 using HealthCare.Application.Features.DoctorAppointments.Commands.BookDoctorAppointment;
 using HealthCare.Application.Features.DoctorAppointments.Contracts;
 using Mapster;
@@ -23,5 +24,15 @@ public class DoctorAppointmentsController(ISender mediatr) : ControllerBase
 
         var result = await _mediatr.Send(command, cancellationToken);
         return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+    }
+
+    [HttpPost("{id:guid}/diagnoses")]
+    [Authorize(Roles = DefaultRoles.Doctor)]
+    public async Task<IActionResult> AddDiagnosis([FromRoute] Guid id, [FromBody] AddDiagnosisRequest request, CancellationToken cancellationToken)
+    {
+        var command = request.Adapt<AddDiagnosisCommand>() with { UserId = User.GetUserId()!, AppointmentId = id };
+
+        var result = await _mediatr.Send(command, cancellationToken);
+        return result.IsSuccess ? NoContent() : result.ToProblem();
     }
 }
