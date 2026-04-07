@@ -128,6 +128,7 @@ public class PaymentCallbackCommandHandler(
         else
         {
             appointment.PaymentStatus = PaymentStatus.Failed;
+            appointment.Status = AppointmentStatus.Cancelled;
             appointment.DoctorSlot.IsBooked = false;
             _logger.LogInformation("Payment failed for appointment {AppointmentId}", appointmentId);
         }

@@ -81,11 +81,11 @@ public class BookDoctorAppointmentCommandHandler(
         // get the type of the appointment and chech if the doctor allow this type
         (bool isHomeVisit, bool isOnline, bool isClinic) = GetAppointmentType(request.AppointmentType);
 
-        if (isHomeVisit && !doctor.AllowOnlineConsultation)
-            return Result.Failure<BookDoctorAppointmentResponse>(DoctorAppointmentErrors.OnlineNotSupported);
-
-        if (isOnline && !doctor.AllowHomeVisit)
+        if (isHomeVisit && !doctor.AllowHomeVisit)
             return Result.Failure<BookDoctorAppointmentResponse>(DoctorAppointmentErrors.HomeVisitNotSupported);
+
+        if (isOnline && !doctor.AllowOnlineConsultation)
+            return Result.Failure<BookDoctorAppointmentResponse>(DoctorAppointmentErrors.OnlineNotSupported);
 
         // create the appointment and save it in the database this happen using transaction to make sure everything is saved or everything not saved
         using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);

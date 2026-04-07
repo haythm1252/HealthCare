@@ -11,7 +11,6 @@ namespace HealthCare.Application.Features.Users.Queries.GetUsers;
 public record GetUsersQuery(
     string? Search,
     string? Role,
-    bool Descending = false,
     bool IsDisabled = false,
     int PageNumber = 1,
     int PageSize = 20

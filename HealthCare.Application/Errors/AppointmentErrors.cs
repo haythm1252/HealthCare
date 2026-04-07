@@ -35,4 +35,8 @@ public static class AppointmentErrors
 
     public static readonly Error UnSupportedType =
         new("Appointment.WrongType", "Unsupported Appointment Type", 400);
+
+
+    public static readonly Error PaymentNotSupported =
+    new("Appointment.PaymentNotSupported", "This appointment is not an Online appointment; online payment is not supported for this appointment type.", 400);
 }

@@ -3,6 +3,7 @@ using HealthCare.Application.Common.Consts;
 using HealthCare.Application.Features.DoctorAppointments.Commands.AddDiagnosis;
 using HealthCare.Application.Features.DoctorAppointments.Commands.BookDoctorAppointment;
 using HealthCare.Application.Features.DoctorAppointments.Contracts;
+using HealthCare.Application.Features.DoctorAppointments.Queries.PaymentStatus;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -35,4 +36,17 @@ public class DoctorAppointmentsController(ISender mediatr) : ControllerBase
         var result = await _mediatr.Send(command, cancellationToken);
         return result.IsSuccess ? NoContent() : result.ToProblem();
     }
+
+
+
+    [HttpGet("{id:guid}/payment-status")]
+    [Authorize(Roles = DefaultRoles.Patient)]
+    public async Task<IActionResult> AppointmentPaymentStatus([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var query = new DoctorAppointmentPaymentStatusQuery(User.GetUserId()!, id);
+
+        var result = await _mediatr.Send(query, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+    }
+
 }
