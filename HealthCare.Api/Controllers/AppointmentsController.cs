@@ -4,6 +4,7 @@ using HealthCare.Application.Features.Appointments.Commands.AppointmentConfirmat
 using HealthCare.Application.Features.Appointments.Commands.CancelAppointment;
 using HealthCare.Application.Features.Appointments.Commands.UpdateFinalStatus;
 using HealthCare.Application.Features.Appointments.Contracts;
+using HealthCare.Application.Features.Appointments.Queries.PatientAppointmentHistory;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +18,18 @@ namespace HealthCare.Api.Controllers;
 public class AppointmentsController(ISender mediatr) : ControllerBase
 {
     private readonly ISender _mediatr = mediatr;
+
+
+    [HttpGet("me/patient-history")]
+    [Authorize(Roles = DefaultRoles.Patient)]
+    public async Task<IActionResult> GetPatientAppointmentHistory(CancellationToken cancellationToken)
+    {
+        var query = new PatientAppointmentHistoryQuery(User.GetUserId()!);
+
+        var result = await _mediatr.Send(query, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+    }
+
 
     [HttpPatch("{id:Guid}/confrimation")]
     [Authorize(Roles = $"{DefaultRoles.Doctor},{DefaultRoles.Nurse},{DefaultRoles.Lab}")]

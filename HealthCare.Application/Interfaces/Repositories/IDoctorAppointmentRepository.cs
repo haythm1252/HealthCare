@@ -1,3 +1,4 @@
+using HealthCare.Application.Features.Appointments.Contracts;
 using HealthCare.Application.Interfaces.Repositories.Base;
 using HealthCare.Domain.Entities;
 using System;
@@ -8,4 +9,5 @@ namespace HealthCare.Application.Interfaces.Repositories;
 
 public interface IDoctorAppointmentRepository : IBaseRepository<DoctorAppointment>
 {
+    Task<IEnumerable<AppointmentDto>> GetPatientAppointmentsAsync(Guid patientId, CancellationToken cancellationToken);
 }
