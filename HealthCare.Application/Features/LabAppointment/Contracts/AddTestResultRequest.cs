@@ -6,7 +6,7 @@ using System.Text;
 namespace HealthCare.Application.Features.LabAppointment.Contracts;
 
 public record AddTestResultRequest(
-    decimal Value,
-    string Summary,
+    decimal? Value,
+    string? Summary,
     IFormFile? ResultFile
 );

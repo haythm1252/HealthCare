@@ -1,4 +1,5 @@
 ﻿using HealthCare.Application.Features.Patients.Contracts;
+using HealthCare.Application.Features.Patients.MedicalRecordContracts;
 using HealthCare.Application.Features.Patients.Queries.PatientProfile;
 using HealthCare.Application.Interfaces.Repositories.Base;
 using HealthCare.Domain.Users;
@@ -10,4 +11,5 @@ namespace HealthCare.Application.Interfaces.Repositories;
 
 public interface IPatientRepository : IBaseRepository<Patient>
 {
+    Task<MedicalRecordResponse?> GetPatientMedicalRecordAsync(Guid patientId, CancellationToken cancellationToken);
 }

@@ -11,7 +11,7 @@ public record AddTestResultCommand(
     string UserId,
     Guid AppointmentId,
     Guid TestResultId,
-    decimal Value,
-    string Summary,
+    decimal? Value,
+    string? Summary,
     IFormFile? ResultFile
 ) : IRequest<Result>;
