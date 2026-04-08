@@ -1,8 +1,10 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
+using HealthCare.Application.Features.Appointments.Contracts;
 using HealthCare.Application.Features.DoctorAppointments.Commands.AddDiagnosis;
 using HealthCare.Application.Features.DoctorAppointments.Commands.BookDoctorAppointment;
 using HealthCare.Application.Features.DoctorAppointments.Contracts;
+using HealthCare.Application.Features.DoctorAppointments.Queries.GetDoctorAppointments;
 using HealthCare.Application.Features.DoctorAppointments.Queries.PaymentStatus;
 using Mapster;
 using MediatR;
@@ -16,6 +18,17 @@ namespace HealthCare.Api.Controllers;
 public class DoctorAppointmentsController(ISender mediatr) : ControllerBase
 {
     private readonly ISender _mediatr = mediatr;
+
+    [HttpGet("me")]
+    [Authorize(Roles = DefaultRoles.Doctor)]
+    public async Task<IActionResult> GetMyAppointments([FromQuery] GetAppointmentsRequest request ,CancellationToken cancellationToken)
+    {
+        var query = request.Adapt<GetDoctorAppointmentsQuery>() with { UserId = User.GetUserId()! };
+
+        var result = await _mediatr.Send(query, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+    }
+
 
     [HttpPost]
     [Authorize(Roles = DefaultRoles.Patient)]

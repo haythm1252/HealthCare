@@ -36,6 +36,11 @@ public class BookLabAppointmentCommandValidator : AbstractValidator<BookLabAppoi
             .When(x => x.AppointmentType.Equals(AppointmentType.HomeVisit.ToString(), StringComparison.OrdinalIgnoreCase))
             .WithMessage("Home address is required for Home Visit appointments.");
 
+        RuleFor(x => x.Address)
+            .Null()
+            .When(x => x.AppointmentType.Equals(AppointmentType.OnSiteVisit.ToString(), StringComparison.OrdinalIgnoreCase))
+            .WithMessage("The Address is not required for the Online and OnSiteVisit");
+
         RuleFor(x => x.StartTime)
             .NotEmpty();    
 
@@ -44,6 +49,8 @@ public class BookLabAppointmentCommandValidator : AbstractValidator<BookLabAppoi
             .WithMessage("You must select at least one lab test to book an appointment.")
             .Must(BeNotDublicated)
             .WithMessage("the tests added are dublicated you send the same test more than one time");
+
+
     }
 
     private bool BeNotDublicated(IEnumerable<Guid> LabTestsIds)

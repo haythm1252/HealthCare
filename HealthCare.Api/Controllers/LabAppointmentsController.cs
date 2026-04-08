@@ -1,14 +1,13 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
+using HealthCare.Application.Features.Appointments.Contracts;
 using HealthCare.Application.Features.LabAppointment.Commands.AddTestResult;
 using HealthCare.Application.Features.LabAppointment.Commands.BookLabAppointment;
 using HealthCare.Application.Features.LabAppointment.Contracts;
-using HealthCare.Application.Features.NurseAppointments.Command.BookNurseAppointment;
-using HealthCare.Application.Features.NurseAppointments.Contracts;
+using HealthCare.Application.Features.LabAppointment.Queries.GetLabAppointments;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthCare.Api.Controllers;
@@ -18,6 +17,16 @@ namespace HealthCare.Api.Controllers;
 public class LabAppointmentsController(ISender mediatr) : ControllerBase
 {
     private readonly ISender _mediatr = mediatr;
+
+    [HttpGet("me")]
+    [Authorize(Roles = DefaultRoles.Lab)]
+    public async Task<IActionResult> GetMyAppointments([FromQuery] GetAppointmentsRequest request, CancellationToken cancellationToken)
+    {
+        var query = request.Adapt<GetLabAppointmentsQuery>() with { UserId = User.GetUserId()! };
+
+        var result = await _mediatr.Send(query, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+    }
 
     [HttpPost]
     [Authorize(Roles = DefaultRoles.Patient)]

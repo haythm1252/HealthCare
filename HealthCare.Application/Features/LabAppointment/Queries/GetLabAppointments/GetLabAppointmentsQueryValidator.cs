@@ -4,11 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HealthCare.Application.Features.NurseAppointments.Queries.GetNurseAppointments;
+namespace HealthCare.Application.Features.LabAppointment.Queries.GetLabAppointments;
 
-public class GetNurseAppointmentsQueryValidator : AbstractValidator<GetNurseAppointmentsQuery>
+public class GetLabAppointmentsQueryValidator : AbstractValidator<GetLabAppointmentsQuery>
 {
-    public GetNurseAppointmentsQueryValidator()
+    public GetLabAppointmentsQueryValidator()
     {
         RuleFor(x => x.UserId)
             .NotEmpty();
@@ -30,7 +30,9 @@ public class GetNurseAppointmentsQueryValidator : AbstractValidator<GetNurseAppo
             .WithMessage("Invalid Appointment Status.");
 
         RuleFor(x => x.AppointmentType)
-            .IsEnumName(typeof(NurseServiceType), caseSensitive: false)
-            .WithMessage("Invalid service type. Please choose 'QuickVisit' or 'HourlyStay'.");
+            .IsEnumName(typeof(AppointmentType), caseSensitive: false)
+            .WithMessage($"Invalid appointment type. Please enter {AppointmentType.HomeVisit} or {AppointmentType.OnSiteVisit}.")
+            .NotEqual(AppointmentType.Online.ToString(), StringComparer.OrdinalIgnoreCase)
+            .WithMessage("Online appointments are not supported for laboratory services.");
     }
 }

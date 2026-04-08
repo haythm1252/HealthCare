@@ -1,11 +1,12 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
+using HealthCare.Application.Features.Appointments.Contracts;
 using HealthCare.Application.Features.NurseAppointments.Command.BookNurseAppointment;
 using HealthCare.Application.Features.NurseAppointments.Contracts;
+using HealthCare.Application.Features.NurseAppointments.Queries.GetNurseAppointments;
 using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthCare.Api.Controllers;
@@ -15,6 +16,17 @@ namespace HealthCare.Api.Controllers;
 public class NurseAppointmentsController(ISender mediatr) : ControllerBase
 {
     private readonly ISender _mediatr = mediatr;
+
+
+    [HttpGet("me")]
+    [Authorize(Roles = DefaultRoles.Nurse)]
+    public async Task<IActionResult> GetMyAppointments([FromQuery] GetAppointmentsRequest request, CancellationToken cancellationToken)
+    {
+        var query = request.Adapt<GetNurseAppointmentsQuery>() with { UserId = User.GetUserId()! };
+
+        var result = await _mediatr.Send(query, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+    }
 
     [HttpPost]
     [Authorize(Roles = DefaultRoles.Patient)]

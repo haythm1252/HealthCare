@@ -1,4 +1,7 @@
+using HealthCare.Application.Common.Pagination;
 using HealthCare.Application.Features.Appointments.Contracts;
+using HealthCare.Application.Features.DoctorAppointments.Contracts;
+using HealthCare.Application.Features.DoctorAppointments.Queries.GetDoctorAppointments;
 using HealthCare.Application.Interfaces.Repositories;
 using HealthCare.Domain.Entities;
 using HealthCare.Domain.Enums;
@@ -38,5 +41,49 @@ public class DoctorAppointmentRepository(ApplicationDbContext context)
             ))
             .ToListAsync(cancellationToken);
     }
-      
+
+
+    public async Task<PagedList<DoctorAppointmentResponse>> GetDoctorAppointmentsWithFiltersAsync(Guid doctorId, GetDoctorAppointmentsQuery filters, CancellationToken cancellationToken)
+    {
+        var query = _context.DoctorAppointments
+            .AsNoTracking()
+            .Where(a => a.DoctorId == doctorId);
+
+        var hasStatus = Enum.TryParse<AppointmentStatus>(filters.Status, true, out var status);
+        var hasType = Enum.TryParse<AppointmentType>(filters.AppointmentType, true, out var type);
+
+
+        if (!string.IsNullOrWhiteSpace(filters.Search))
+            query = query.Where(a => a.Patient.User.Name.Contains(filters.Search));
+
+        if (hasStatus)
+            query = query.Where(a => a.Status == status);
+
+        if (hasType)
+            query = query.Where(a => a.AppointmentType == type);
+
+
+        bool isPendingHomeVisits = (hasType && type == AppointmentType.HomeVisit) &&
+                              (hasStatus && status == AppointmentStatus.Pending);
+
+        return await query.OrderByDescending(a => a.CreatedAt)
+            .Select(a => new DoctorAppointmentResponse
+            (
+                a.Id,
+                a.Patient.User.Name,
+                a.DoctorSlot.Date,
+                a.DoctorSlot.StartTime,
+                a.DoctorSlot.EndTime,
+                a.Status,
+                a.AppointmentType,
+                a.Address,
+
+                // i didnt check by the data of the appointment cuz i want to send this data only if it ask me in the filters to get the bending home visit 
+                // (for the pending home visit requests page so i dont make another endpoint 
+                isPendingHomeVisits ? a.Patient.User.PhoneNumber : null,
+                isPendingHomeVisits ? a.Notes : null,
+                isPendingHomeVisits ? a.Patient.User.Gender : null
+            ))
+            .ToPagedListAsync(filters.Page, filters.PageSize, cancellationToken);
+    }
 }

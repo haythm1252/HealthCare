@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace HealthCare.Application.Features.LabAppointments.Queries.GetLabAppointmentDetails;
+namespace HealthCare.Application.Features.LabAppointment.Queries.GetLabAppointmentDetails;
 
 internal class GetLabAppointmentDetailsQueryHandler
 {
