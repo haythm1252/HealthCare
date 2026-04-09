@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using HealthCare.Application.Common.Result;
+using HealthCare.Application.Features.LabAppointment.Contracts;
+using MediatR;
 
 namespace HealthCare.Application.Features.LabAppointment.Queries.GetLabAppointmentDetails;
 
-internal class GetLabAppointmentDetailsQuery
-{
-}
+public record GetLabAppointmentDetailsQuery(
+    string UserId,
+    string UserRole,
+    Guid AppointmentId
+) : IRequest<Result<LabAppointmentDetailsResponse>>;

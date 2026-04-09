@@ -55,7 +55,7 @@ public class AddDiagnosisCommandHandler(IUnitOfWork unitOfWork) : IRequestHandle
 
                 // delete tests not in the request tests
                 var testsToRemove = appointment.DoctorAppointmentTests
-                .Where(dbTest => !request.RequiredTests.Contains(dbTest.TestId))
+                .Where(dbTest => !request.RequiredTests.Contains(dbTest.TestId) && dbTest.Status != TestResultStatus.Completed)
                 .ToList();
 
                 await _unitOfWork.DoctorAppointmentTests.DeleteRange(testsToRemove);
@@ -77,7 +77,8 @@ public class AddDiagnosisCommandHandler(IUnitOfWork unitOfWork) : IRequestHandle
             }
             else // if the request tests is empty [] delete all tests
             {
-                await _unitOfWork.DoctorAppointmentTests.DeleteRange(appointment.DoctorAppointmentTests);
+                await _unitOfWork.DoctorAppointmentTests
+                    .DeleteRange(appointment.DoctorAppointmentTests.Where(dat => dat.Status != TestResultStatus.Completed));
             }
             
         }

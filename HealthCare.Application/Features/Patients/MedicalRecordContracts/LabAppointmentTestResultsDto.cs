@@ -1,4 +1,5 @@
-﻿using HealthCare.Domain.Enums;
+﻿using HealthCare.Application.Features.LabAppointment.Contracts;
+using HealthCare.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;

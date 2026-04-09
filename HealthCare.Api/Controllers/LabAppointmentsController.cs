@@ -4,6 +4,7 @@ using HealthCare.Application.Features.Appointments.Contracts;
 using HealthCare.Application.Features.LabAppointment.Commands.AddTestResult;
 using HealthCare.Application.Features.LabAppointment.Commands.BookLabAppointment;
 using HealthCare.Application.Features.LabAppointment.Contracts;
+using HealthCare.Application.Features.LabAppointment.Queries.GetLabAppointmentDetails;
 using HealthCare.Application.Features.LabAppointment.Queries.GetLabAppointments;
 using Mapster;
 using MediatR;
@@ -23,6 +24,16 @@ public class LabAppointmentsController(ISender mediatr) : ControllerBase
     public async Task<IActionResult> GetMyAppointments([FromQuery] GetAppointmentsRequest request, CancellationToken cancellationToken)
     {
         var query = request.Adapt<GetLabAppointmentsQuery>() with { UserId = User.GetUserId()! };
+
+        var result = await _mediatr.Send(query, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+    }
+
+    [HttpGet("{id:guid}")]
+    [Authorize(Roles = $"{DefaultRoles.Patient},{DefaultRoles.Lab}")]
+    public async Task<IActionResult> GetAppointmentDetails([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var query = new GetLabAppointmentDetailsQuery(User.GetUserId()!, User.GetRole()!, id);
 
         var result = await _mediatr.Send(query, cancellationToken);
         return result.IsSuccess ? Ok(result.Value) : result.ToProblem();

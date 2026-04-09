@@ -110,7 +110,6 @@ public class BookDoctorAppointmentCommandHandler(
             };
 
             await _unitOfWork.DoctorAppointments.AddAsync(appointment);
-            slot.IsBooked = true;
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             string? checkoutUrl = null;
@@ -156,6 +155,8 @@ public class BookDoctorAppointmentCommandHandler(
                     await _unitOfWork.Chats.AddAsync(chat);
                 }
 
+                // make the slot booked 
+                            slot.IsBooked = true;
             }
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);

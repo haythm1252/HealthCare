@@ -78,6 +78,7 @@ public class PaymentCallbackCommandHandler(
             appointment.PaymentStatus = PaymentStatus.Paid;
             appointment.Status = AppointmentStatus.Confirmed;
             appointment.DoctorSlot.IsBooked = true;
+            appointment.PaymentDate = DateTime.UtcNow;
             appointment.PaymentTransactionId = obj.GetProperty("id").ToString();
 
             var emailData = await _unitOfWork.DoctorAppointments.AsQueryable()
@@ -129,7 +130,6 @@ public class PaymentCallbackCommandHandler(
         {
             appointment.PaymentStatus = PaymentStatus.Failed;
             appointment.Status = AppointmentStatus.Cancelled;
-            appointment.DoctorSlot.IsBooked = false;
             _logger.LogInformation("Payment failed for appointment {AppointmentId}", appointmentId);
         }
 
