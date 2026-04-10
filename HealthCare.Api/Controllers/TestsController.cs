@@ -30,7 +30,7 @@ public class TestsController(ISender mediator) : ControllerBase
     public async Task<ActionResult<TestResponse>> Create([FromBody] AddTestCommand command)
     {
         var result = await _mediator.Send(command);
-        return Ok(result);
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
     }
 
     [HttpPut("{id:Guid}")]

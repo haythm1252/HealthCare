@@ -29,7 +29,7 @@ public class UpdateLabTestCommandHandler(IUnitOfWork unitOfWork) : IRequestHandl
             .SingleOrDefaultAsync(cancellationToken);
 
         if (labTest is null)
-            return Result.Failure(TestErrros.NotFound);
+            return Result.Failure(TestErrors.NotFound);
 
         labTest.Price = request.Price;
         labTest.IsAvailableAtHome = request.IsAvailableAtHome;

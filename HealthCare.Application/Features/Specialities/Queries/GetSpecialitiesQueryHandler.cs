@@ -18,6 +18,7 @@ public class GetSpecialitiesQueryHandler(IUnitOfWork unitOfWork) : IRequestHandl
         return await _unitOfWork.Specialties
             .AsQueryable()
             .AsNoTracking()
+            .Where(s => !s.IsDeleted)
             .ProjectToType<SpecialityResponse>()
             .ToListAsync(cancellationToken);
     }

@@ -3,6 +3,7 @@ using HealthCare.Application.Common.Result;
 using HealthCare.Application.Errors;
 using HealthCare.Application.Features.DoctorAppointments.Contracts;
 using HealthCare.Application.Features.LabAppointment.Contracts;
+using HealthCare.Application.Features.Reviews.Contracts;
 using HealthCare.Application.Interfaces.Repositories.UnitOfWork;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -54,7 +55,16 @@ public class GetLabAppointmentDetailsQueryHandler(IUnitOfWork unitOfWork)
                     tr.ResultFileUrl,
                     tr.Status,
                     tr.SubmittedAt
-                ))
+                )),
+                a.Patient.Reviews.Where(r => r.TargetId == a.LabId)
+                    .Select(r => new ReviewResponse(
+                        r.Id,
+                        r.Patient.User.Name,
+                        r.Rating,
+                        r.Comment,
+                        r.LastModified ?? r.CreatedAt,
+                        r.LastModified.HasValue && r.LastModified > r.CreatedAt
+                    )).SingleOrDefault()
             )).SingleOrDefaultAsync(cancellationToken);
 
         if (appointment is null)

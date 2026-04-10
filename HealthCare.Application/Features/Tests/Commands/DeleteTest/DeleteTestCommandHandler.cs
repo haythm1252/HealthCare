@@ -16,11 +16,20 @@ public class DeleteTestCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<
 
     public async Task<Result> Handle(DeleteTestCommand request, CancellationToken cancellationToken)
     {
-        var res = await _unitOfWork.Tests.AsQueryable()
+        var test = await _unitOfWork.Tests.AsQueryable()
+            .Include(t => t.LabTests)
             .Where(t => t.Id == request.Id)
-            .ExecuteDeleteAsync(cancellationToken);
+            .SingleOrDefaultAsync(cancellationToken);
 
-        return res > 0 ? Result.Success() :
-            Result.Failure(TestErrros.NotFound);
+        if (test is null)
+            return Result.Failure(TestErrors.NotFound);
+
+        test.IsDeleted = true;
+
+        foreach (var labTest in test.LabTests)
+            labTest.IsDeleted = true;
+
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        return Result.Success();
     }
 }

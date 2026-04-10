@@ -25,7 +25,7 @@ public class GetLabTestsQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<G
 
         var tests = await _unitOfWork.LabTests.AsQueryable()
             .AsNoTracking()
-            .Where(lt => lt.Lab.UserId == request.UserId)
+            .Where(lt => lt.Lab.UserId == request.UserId && !lt.IsDeleted)
             .OrderByDescending(lt => lt.CreatedAt)
             .ProjectToType<LabTestResponse>()
             .ToListAsync(cancellationToken);

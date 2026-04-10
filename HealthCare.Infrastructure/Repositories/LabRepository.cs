@@ -25,7 +25,7 @@ public class LabRepository(ApplicationDbContext context) : BaseRepository<Lab>(c
 
         var hasTests = request.TestIds?.Any() == true;
         if (hasTests)
-            query = query.Where(l => l.LabTests.Any(lt => request.TestIds!.Contains(lt.TestId)));
+            query = query.Where(l => l.LabTests.Any(lt => request.TestIds!.Contains(lt.TestId) && !lt.IsDeleted));
 
         if (!string.IsNullOrWhiteSpace(request.Search))
             query = query.Where(l => l.User.Name.Contains(request.Search));
@@ -37,7 +37,7 @@ public class LabRepository(ApplicationDbContext context) : BaseRepository<Lab>(c
             query = query.Where(l => l.Rating >= request.MinRate.Value);
 
         if(hasTests)
-            query = query.OrderByDescending(l => l.LabTests.Count(lt => request.TestIds!.Contains(lt.TestId)));
+            query = query.OrderByDescending(l => l.LabTests.Count(lt => request.TestIds!.Contains(lt.TestId) && !lt.IsDeleted));
 
         else if (!string.IsNullOrEmpty(request.Sort))
             query = request.Sort == FiltersOptions.RateAsc
@@ -53,9 +53,9 @@ public class LabRepository(ApplicationDbContext context) : BaseRepository<Lab>(c
                 l.RatingsCount,
                 l.ProfilePictureUrl,
 
-                request.TestIds != null ? l.LabTests.Count(lt => request.TestIds.Contains(lt.TestId)) : null,
+                request.TestIds != null ? l.LabTests.Count(lt => request.TestIds.Contains(lt.TestId) && !lt.IsDeleted) : null,
                 request.TestIds != null ? request.TestIds.Count() : null,
-                request.TestIds != null ? l.LabTests.Where(lt => request.TestIds.Contains(lt.TestId))
+                request.TestIds != null ? l.LabTests.Where(lt => request.TestIds.Contains(lt.TestId) && !lt.IsDeleted)
                                             .Select(lt => lt.Test.Name).ToList() : null
             ))
             .ToPagedListAsync(request.Page, request.PageSize, cancellationToken);

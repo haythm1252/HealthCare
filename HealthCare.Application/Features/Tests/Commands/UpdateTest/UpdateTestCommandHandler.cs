@@ -19,7 +19,7 @@ public class UpdateTestCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<
             .SingleOrDefaultAsync(t => t.Id == request.Id, cancellationToken: cancellationToken);
 
         if (test is null)
-            return Result.Failure(TestErrros.NotFound);
+            return Result.Failure(TestErrors.NotFound);
 
         test.Name = request.Name;
         test.Description = request.Description;

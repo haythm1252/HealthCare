@@ -23,13 +23,13 @@ public class AddLabTestCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<
             return Result.Failure<LabTestResponse>(UserErrors.NotFound);
 
         var test = await _unitOfWork.Tests.AsQueryable()
-            .Where(l => l.Id == request.TestId)
+            .Where(l => l.Id == request.TestId && !l.IsDeleted)
             .SingleOrDefaultAsync(cancellationToken);
 
         if(test is null)
-            return Result.Failure<LabTestResponse>(TestErrros.NotFound);
+            return Result.Failure<LabTestResponse>(TestErrors.NotFound);
 
-        var isAddedAlready = await _unitOfWork.LabTests.AnyAsync(lt => lt.TestId == request.TestId, cancellationToken);
+        var isAddedAlready = await _unitOfWork.LabTests.AnyAsync(lt => lt.TestId == request.TestId  && lt.LabId == labId && !lt.IsDeleted, cancellationToken);
         if(isAddedAlready)
             return Result.Failure<LabTestResponse>(new Error("LabTest.AlreadyExist",
                 "the test you want to add is already exist", 409));

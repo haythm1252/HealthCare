@@ -18,6 +18,7 @@ public class GetTestsQueryHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetT
     {
         return await _unitOfWork.Tests.AsQueryable()
             .AsNoTracking()
+            .Where(t => !t.IsDeleted)
             .ProjectToType<TestResponse>()
             .ToListAsync(cancellationToken);
     }

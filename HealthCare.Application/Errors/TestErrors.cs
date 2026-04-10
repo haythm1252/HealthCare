@@ -5,7 +5,7 @@ using System.Text;
 
 namespace HealthCare.Application.Errors;
 
-public static class TestErrros
+public static class TestErrors
 {
     public static readonly Error NotFound =
         new("Test.NotFound", "Test is Not Found", 404);

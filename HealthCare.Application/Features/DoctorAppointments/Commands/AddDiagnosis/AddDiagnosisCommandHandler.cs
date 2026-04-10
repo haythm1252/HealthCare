@@ -51,7 +51,7 @@ public class AddDiagnosisCommandHandler(IUnitOfWork unitOfWork) : IRequestHandle
                     .CountAsync(t => request.RequiredTests.Contains(t.Id), cancellationToken);
 
                 if (existingCount != request.RequiredTests.Count())
-                    return Result.Failure(TestErrros.InvalidTest);
+                    return Result.Failure(TestErrors.InvalidTest);
 
                 // delete tests not in the request tests
                 var testsToRemove = appointment.DoctorAppointmentTests

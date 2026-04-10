@@ -15,11 +15,17 @@ public class DeleteLabTestCommandHandler(IUnitOfWork unitOfWork) : IRequestHandl
 
     public async Task<Result> Handle(DeleteLabTestCommand request, CancellationToken cancellationToken)
     {
-        var res = await _unitOfWork.LabTests.AsQueryable()
-            .Where(lt => lt.Id == request.LabTestId && lt.Lab.UserId == request.UserId)
-            .ExecuteDeleteAsync(cancellationToken);
+        var labtest = await _unitOfWork.LabTests.AsQueryable()
+            .Where(lt => lt.Id == request.LabTestId && lt.Lab.UserId == request.UserId && !lt.IsDeleted)
+            .SingleOrDefaultAsync(cancellationToken);
 
-        return res > 0 ? Result.Success() :
-            Result.Failure(TestErrros.NotFound);
+        if (labtest is null)
+            return Result.Failure(TestErrors.NotFound);
+
+        labtest.IsDeleted = true;
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
     }
+    
 }

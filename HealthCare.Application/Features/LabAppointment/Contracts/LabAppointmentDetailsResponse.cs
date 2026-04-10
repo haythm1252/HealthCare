@@ -1,4 +1,5 @@
-﻿using HealthCare.Domain.Enums;
+﻿using HealthCare.Application.Features.Reviews.Contracts;
+using HealthCare.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,5 +18,6 @@ public record LabAppointmentDetailsResponse(
     decimal TotalFee,
     string? Notes,
     string? Address,
-    IEnumerable<TestResultDto> TestResults
+    IEnumerable<TestResultDto> TestResults,
+    ReviewResponse? Review
 );

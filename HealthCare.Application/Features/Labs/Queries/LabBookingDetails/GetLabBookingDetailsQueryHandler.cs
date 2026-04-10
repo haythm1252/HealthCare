@@ -38,7 +38,9 @@ public class GetLabBookingDetailsQueryHandler(IUnitOfWork unitOfWork)
                 l.ClosingTime,
                 l.WorkingDays,
 
-                l.LabTests.Select(lt => new LabTestResponse(
+                l.LabTests
+                .Where(lt => !lt.IsDeleted)
+                .Select(lt => new LabTestResponse(
                     lt.Id,
                     lt.TestId,
                     lt.Test.Name,

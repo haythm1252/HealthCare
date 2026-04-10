@@ -11,4 +11,4 @@ public record AddTestCommand(
     string Name,
     string Description,
     string PreRequisites
-) : IRequest<TestResponse>;
+) : IRequest<Result<TestResponse>>;

@@ -1,4 +1,5 @@
-﻿using HealthCare.Domain.Enums;
+﻿using HealthCare.Application.Features.Reviews.Contracts;
+using HealthCare.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,5 +22,6 @@ public record DoctorAppointmentDetailsResponse(
     PaymentType PaymentType,
     string? Diagnosis,
     string? Prescriptions,
-    IEnumerable<RequiredTestDto> RequiredTests
+    IEnumerable<RequiredTestDto> RequiredTests,
+    ReviewResponse? Review
 );
