@@ -29,6 +29,7 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
     private IUserRepository? _users;
     private IEmailOtpRepository? _emailOtps;
     private IDoctorAppointmentTestRepository? _doctorAppointmentTests;
+    private IAiMessageRepository? _aiMessage;
 
     // here we create new instances of repositories when they are called for the first time 
     public IPatientRepository Patients => _patients ??= new PatientRepository(context);
@@ -51,6 +52,7 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
     public IUserRepository Users => _users ??= new UserRepository(context);
     public IEmailOtpRepository EmailOtps => _emailOtps ??= new EmailOtpRepository(context);
     public IDoctorAppointmentTestRepository DoctorAppointmentTests => _doctorAppointmentTests ??= new DoctorAppointmentTestRepository(context);
+    public IAiMessageRepository AiMessages => _aiMessage ??= new AiMessageRepository(context);
 
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

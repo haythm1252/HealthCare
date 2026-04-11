@@ -56,6 +56,7 @@ public static class InfrastructureDependencies
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<IPaymobService, PaymobService>();
+            services.AddScoped<IAiChatService, AiChatService>();
 
             return services;
         }

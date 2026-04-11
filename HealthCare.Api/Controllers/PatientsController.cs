@@ -1,5 +1,7 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
+using HealthCare.Application.Features.AiChatBot.Commands;
+using HealthCare.Application.Features.AiChatBot.Contracts;
 using HealthCare.Application.Features.Labs.Commands.UpdateProfile;
 using HealthCare.Application.Features.Labs.Contracts;
 using HealthCare.Application.Features.Patients.Commands.UpdateProfile;
@@ -21,6 +23,16 @@ public class PatientsController(ISender mediatr) : ControllerBase
 
 
     
+    [HttpPost("ai-chat")]
+    [Authorize(Roles = DefaultRoles.Patient)]
+    public async Task<IActionResult> AiChat([FromForm] AiChatRequest request, CancellationToken cancellationToken)
+    {
+        var command = new SendAiChatCommand(User.GetUserId()!, request.Message, request.Attachment);
+
+        var res = await _mediatr.Send(command, cancellationToken);
+        return res.IsSuccess ? Ok(res.Value) : res.ToProblem();
+    }
+
     [HttpGet("profile")]
     [Authorize(Roles = DefaultRoles.Patient)]
     public async Task<IActionResult> GetPatientProfile(CancellationToken cancellationToken)

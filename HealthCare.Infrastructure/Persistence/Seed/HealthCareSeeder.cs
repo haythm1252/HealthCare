@@ -27,6 +27,7 @@ public class HealthCareSeeder
         await SeedNurseAsync(userManager, context);
         await SeedPatientAsync(userManager, context);
         await SeedLabAsync(userManager, context);
+        //await SeedSpecialtiesAsync(context);
     }
 
     private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
@@ -167,4 +168,64 @@ public class HealthCareSeeder
         }
     }
 
+    //private static async Task SeedSpecialtiesAsync(ApplicationDbContext context)
+    //{
+    //    var specialties = new List<string>
+    //{
+    //    "الأوعية الدموية",
+    //    "الأمراض الجلدية",
+    //    "الأعصاب",
+    //    "الأطفال",
+    //    "حديثي الولادة",
+    //    "العظام",
+    //    "النساء والتوليد",
+    //    "العقم والحقن المجهري",
+    //    "الأنف والأذن والحنجرة",
+    //    "العيون",
+    //    "الباطنة",
+    //    "الجهاز الهضمي",
+    //    "الكبد",
+    //    "الكلى",
+    //    "المسالك البولية",
+    //    "الصدر والجهاز التنفسي",
+    //    "الأورام",
+    //    "الدم",
+    //    "المناعة والحساسية",
+    //    "الغدد الصماء",
+    //    "السكري",
+    //    "الطب النفسي",
+    //    "العلاج الطبيعي",
+    //    "التغذية العلاجية",
+    //    "جراحة التجميل",
+    //    "طب الأسنان",
+    //    "تقويم الأسنان",
+    //    "جراحة الفم والأسنان",
+    //    "الطوارئ",
+    //    "العناية المركزة",
+    //    "الأشعة التشخيصية",
+    //    "الأشعة التداخلية",
+    //    "التحاليل الطبية",
+    //    "الطب الرياضي",
+    //    "طب الشيخوخة",
+    //    "الطب العام",
+    //    "الطب الوقائي",
+    //    "الأمراض المعدية",
+    //    "الروماتيزم",
+    //    "العمود الفقري",
+    //    "جراحة المخ والأعصاب"
+    //};
+
+    //    foreach (var name in specialties.Distinct())
+    //    {
+    //        if (!await context.Specialties.AnyAsync(s => s.Name == name))
+    //        {
+    //            context.Specialties.Add(new Specialty
+    //            {
+    //                Name = name
+    //            });
+    //        }
+    //    }
+
+    //    await context.SaveChangesAsync();
+    //}
 }

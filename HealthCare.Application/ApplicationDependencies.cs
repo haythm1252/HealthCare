@@ -49,6 +49,11 @@ public static class ApplicationDependencies
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
+            services.AddOptions<AiSettings>()
+                .Bind(configuration.GetSection(AiSettings.SectionName))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+
             return services;
         }
     }

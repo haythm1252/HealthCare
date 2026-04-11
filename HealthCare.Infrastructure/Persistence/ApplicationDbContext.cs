@@ -33,6 +33,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<NurseShift> NurseShifts => Set<NurseShift>();
     public DbSet<EmailOtp> EmailOtps => Set<EmailOtp>();
     public DbSet<DoctorAppointmentTest> DoctorAppointmentTests => Set<DoctorAppointmentTest>();
+    public DbSet<AiMessage> AiMessages => Set<AiMessage>(); 
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

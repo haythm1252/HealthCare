@@ -31,6 +31,7 @@ public interface IUnitOfWork : IDisposable
     IEmailOtpRepository EmailOtps { get; }
     IUserRepository Users { get; }
     IDoctorAppointmentTestRepository DoctorAppointmentTests { get; }
+    IAiMessageRepository AiMessages { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct = default);
