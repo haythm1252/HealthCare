@@ -8,6 +8,7 @@ using HealthCare.Domain.Entities;
 using HealthCare.Domain.Enums;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -19,12 +20,15 @@ namespace HealthCare.Application.Features.AiChatBot.Commands;
 public class SendAiChatCommandHandler(
         IUnitOfWork unitOfWork,
         IAiChatService aiService,
-        ICloudinaryService cloudinaryService
+        ICloudinaryService cloudinaryService,
+        ILogger<SendAiChatCommandHandler> logger
     ) : IRequestHandler<SendAiChatCommand, Result<AiChatResponse>>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IAiChatService _aiService = aiService;
     private readonly ICloudinaryService _cloudinaryService = cloudinaryService;
+    private readonly ILogger<SendAiChatCommandHandler> _logger = logger;
+
     public async Task<Result<AiChatResponse>> Handle(SendAiChatCommand request, CancellationToken cancellationToken)
     {
         var patient = await _unitOfWork.Patients.AsQueryable()
@@ -91,9 +95,19 @@ public class SendAiChatCommandHandler(
 
 
         // gemini response
-        var jsonResponse = await _aiService.GetGeminiResponseAsync(request.Message, attachmentUrl , history, specialties);
+        GeminiParsedResponse? aiData;
+        try
+        {
+            var jsonResponse = await _aiService.GetGeminiResponseAsync(request.Message, attachmentUrl, history, specialties);
 
-        var aiData = JsonSerializer.Deserialize<GeminiParsedResponse>(jsonResponse);
+            aiData = JsonSerializer.Deserialize<GeminiParsedResponse>(jsonResponse);
+        }
+        catch(Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return Result.Failure<AiChatResponse>(new Error("ChatbotErrors.Deserialize", "Unable to deserialize the Ai response", 500));
+        }
+
 
         // recommendation if the specility not null
         IEnumerable<DoctorSummaryResponse>? recommendedDoctors = null;

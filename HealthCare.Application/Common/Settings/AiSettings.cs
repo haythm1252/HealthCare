@@ -12,4 +12,6 @@ public class AiSettings
     public string ApiKey { get; set; } = string.Empty;
     [Required]
     public string SystemPrompt { get; set; } = string.Empty;
+    [Required]
+    public IEnumerable<string> FallbackModels { get; set; } = [];
 }
