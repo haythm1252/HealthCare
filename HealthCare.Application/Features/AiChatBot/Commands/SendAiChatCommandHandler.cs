@@ -72,23 +72,12 @@ public class SendAiChatCommandHandler(
             publicId = uploadResult.Value.PublicId;
         }
 
-        //save the patient message
-        var patientMsg = new AiMessage
-        {
-            Content = request.Message,
-            Role = "user",
-            PatientId = patient.Id,
-            AttachmentUrl = attachmentUrl,
-            AttachmentPublicId = publicId,
-            ContentType = contentType
-        };
-        await _unitOfWork.AiMessages.AddAsync(patientMsg, cancellationToken);
 
         // get last messages to make the ai understand the conversation and the specilites so we can recommedn doctors
         var history = await _unitOfWork.AiMessages.AsQueryable()
             .Where(m => m.PatientId == patient.Id)
             .OrderByDescending(m => m.CreatedAt)
-            .Take(10).OrderBy(m => m.CreatedAt)
+            .Take(4).OrderBy(m => m.CreatedAt)
             .ToListAsync(cancellationToken);
 
         var specialties = string.Join(", ", await _unitOfWork.Specialties.AsQueryable().Select(s => s.Name).ToListAsync(cancellationToken));
@@ -99,20 +88,19 @@ public class SendAiChatCommandHandler(
         try
         {
             var jsonResponse = await _aiService.GetGeminiResponseAsync(request.Message, attachmentUrl, history, specialties);
-
-            aiData = JsonSerializer.Deserialize<GeminiParsedResponse>(jsonResponse);
+            aiData = JsonSerializer.Deserialize<GeminiParsedResponse>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
-            return Result.Failure<AiChatResponse>(new Error("ChatbotErrors.Deserialize", "Unable to deserialize the Ai response", 500));
+            _logger.LogError("Chatbot JSON Error: {Message}", ex.Message);
+            return Result.Failure<AiChatResponse>(new Error("Chatbot.Error", "Failed to process AI response", 500));
         }
 
 
         // recommendation if the specility not null
         IEnumerable<DoctorSummaryResponse>? recommendedDoctors = null;
 
-        if (!string.IsNullOrWhiteSpace(aiData?.SuggestedSpecialty))
+        if (!string.IsNullOrWhiteSpace(aiData!.SuggestedSpecialty))
         {
             recommendedDoctors = await _unitOfWork.Doctors.AsQueryable()
                 .Where(d => d.Specialty.Name == aiData.SuggestedSpecialty && d.User.City == patient.City)
@@ -123,18 +111,28 @@ public class SendAiChatCommandHandler(
                 .ToListAsync(cancellationToken);
         }
 
-        // save the ai message from the gemini so we can send it back in other new messages from patient (as histor or converasation with the old patient messages)
-        var aiMsg = new AiMessage
+        //save the patient and ai message
+        var messagesToSave = new List<AiMessage>
         {
-            Content = aiData!.Message,
-            Role = "model",
-            PatientId = patient.Id,
-            ContentType = ContentType.Text
+            new() {
+                Content = request.Message ?? "",
+                Role = "user",
+                PatientId = patient.Id,
+                AttachmentUrl = attachmentUrl,
+                ContentType = contentType
+            },
+            new() {
+                Content = aiData!.Message,
+                Role = "model",
+                PatientId = patient.Id,
+                ContentType = ContentType.Text
+            }
         };
-        await _unitOfWork.AiMessages.AddAsync(aiMsg, cancellationToken);
+
+        await _unitOfWork.AiMessages.AddRangeAsync(messagesToSave, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var response = new AiChatResponse(aiMsg.Content, aiData.SuggestedSpecialty, recommendedDoctors);
+        var response = new AiChatResponse(aiData!.Message, aiData.SuggestedSpecialty, recommendedDoctors);
         return Result.Success(response);
     }
 }

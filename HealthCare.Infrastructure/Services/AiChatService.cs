@@ -12,93 +12,93 @@ using System.Text;
 
 namespace HealthCare.Infrastructure.Services;
 
-public class AiChatService(IOptions<AiSettings> aiSettings,ILogger<AiChatService> logger) : IAiChatService
+public class AiChatService(IOptions<AiSettings> aiSettings, ILogger<AiChatService> logger) : IAiChatService
 {
     private readonly AiSettings _aiSettings = aiSettings.Value;
     private readonly ILogger<AiChatService> _logger = logger;
 
-    public async Task<string> GetGeminiResponseAsync(
-    string? userMessage,
-    string? attachmentUrl,
-    List<AiMessage> history,
-    string specialtiesList)
+    public async Task<string> GetGeminiResponseAsync(string? userMessage, string? attachmentUrl, List<AiMessage> history, string specialtiesList)
     {
         var client = new Client(apiKey: _aiSettings.ApiKey);
 
-        // Get the old messages from database 
+        var contents = PrepareContents(userMessage, attachmentUrl, history);
+        var config = PrepareConfig(specialtiesList);
+
+
+        foreach (var modelName in _aiSettings.FallbackModels)
+        {
+            try
+            {
+                _logger.LogInformation("Attempting AI request with model: {ModelName}", modelName);
+
+                var response = await client.Models.GenerateContentAsync(
+                    model: modelName,
+                    contents: contents,
+                    config: config
+                );
+
+                if (!string.IsNullOrEmpty(response.Text))
+                {
+                    _logger.LogInformation("Success with model: {ModelName}", modelName);
+                    return response.Text;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Model {ModelName} failed: {Error}", modelName, ex.Message);
+                continue;
+            }
+        }
+
+        var errorJson = "{\"Message\": \"I'm sorry, the AI service is currently overloaded. Please try again in a moment.\", \"SuggestedSpecialty\": null}";
+        _logger.LogWarning("All models failed. Returning static fallback JSON.");
+        return errorJson;
+    }
+
+
+
+    // convert the history messages and the new message to parts and contents that the gemini api use
+    private List<Content> PrepareContents(string? userMessage, string? attachmentUrl, List<AiMessage> history)
+    {
         var contents = new List<Content>();
 
         foreach (var m in history)
         {
             contents.Add(new Content
             {
-                Role = m.Role.ToLower(), 
+                Role = m.Role.ToLower(),
                 Parts = MapMessageToParts(m.Content, m.AttachmentUrl)
             });
         }
 
-        // the new message now
-        var currentParts = new List<Part>
-            {
-                new Part { Text = userMessage ?? "" }
-            };
+        var currentParts = new List<Part> { new Part { Text = userMessage ?? "" } };
 
-        // add the file url if it exist which we just uploaded to cloudinary in the handler
         if (!string.IsNullOrEmpty(attachmentUrl))
         {
-            currentParts.Add(new Part
-            {
-                FileData = new FileData
-                {
-                    FileUri = attachmentUrl
-                }
-            });
+            currentParts.Add(new Part { FileData = new FileData { FileUri = attachmentUrl } });
         }
 
-        contents.Add(new Content
-        {
-            Role = "user",
-            Parts = currentParts
-        });
+        contents.Add(new Content { Role = "user", Parts = currentParts });
+        return contents;
+    }
 
-        // adding the prompt and the specialites to the configureation
-        var config = new GenerateContentConfig
+    // make the config (system prompt and the available specialties)
+    private GenerateContentConfig PrepareConfig(string specialtiesList)
+    {
+        return new GenerateContentConfig
         {
             SystemInstruction = new Content
             {
                 Parts = new List<Part>
             {
-                new Part
-                {
-                    Text = $"{_aiSettings.SystemPrompt}\nAvailable specialties: {specialtiesList}"
-                }
+                new Part { Text = $"{_aiSettings.SystemPrompt}\nAvailable specialties: {specialtiesList}" }
             }
             },
             ResponseMimeType = "application/json"
         };
-
-        string responseText = "I'm sorry, I couldn't process that, please try again.";
-
-        //send the response
-        try
-        {
-            var response = await client.Models.GenerateContentAsync(
-                model: "gemini-2.5-flash",
-                contents: contents,
-                config: config
-            );
-            responseText = response.Text!;
-        }
-        catch(Exception ex)
-        {
-            _logger.Log(LogLevel.Error, ex.Message);
-            _logger.Log(LogLevel.Information, responseText);
-        }
-
-        _logger.Log(LogLevel.Information, responseText);
-        return responseText;
     }
-
+    
+    // convert one message to parts the message itself and the file url if exists
     private List<Part> MapMessageToParts(string text, string? url)
     {
         var parts = new List<Part>
