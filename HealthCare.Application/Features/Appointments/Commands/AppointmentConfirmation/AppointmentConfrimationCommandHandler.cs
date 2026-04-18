@@ -82,6 +82,7 @@ public class AppointmentConfrimationCommandHandler(IUnitOfWork unitOfWork) : IRe
     private async Task<Result> HandleLabAppointmentStatus(AppointmentConfrimationCommand request, AppointmentStatus status, CancellationToken cancellationToken)
     {
         var appointment = await _unitOfWork.LabAppointments.AsQueryable()
+            .Include(la => la.TestResults)
             .Where(la => la.Id == request.AppointmentId && la.Lab.UserId == request.UserId)
             .SingleOrDefaultAsync(cancellationToken);
 
@@ -99,8 +100,36 @@ public class AppointmentConfrimationCommandHandler(IUnitOfWork unitOfWork) : IRe
             return Result.Failure(AppointmentErrors.AppointmentExpired);
         }
 
-        appointment.Status = status;
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
-        return Result.Success();
+        using var transaction = await _unitOfWork.BeginTransactionAsync(cancellationToken);
+        try
+        {
+            appointment.Status = status;
+            var res = await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            if (res <= 0)
+            {
+                await transaction.RollbackAsync(cancellationToken); 
+                return Result.Failure(LabAppointmentErrors.SaveFailed);
+            }
+
+            if (status == AppointmentStatus.Confirmed)
+            {
+                var testIds = appointment.TestResults.Select(tr => tr.TestId).ToList();
+
+                await _unitOfWork.DoctorAppointmentTests.AsQueryable()
+                    .Where(rt => rt.DoctorAppointment.PatientId == appointment.PatientId
+                        && testIds.Contains(rt.TestId)
+                        && rt.Status == TestResultStatus.Pending)
+                    .ExecuteUpdateAsync(setters => setters.SetProperty(a => a.Status, TestResultStatus.InProgress), cancellationToken);
+            }
+
+            await transaction.CommitAsync(cancellationToken);
+            return Result.Success();
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            return Result.Failure(LabAppointmentErrors.SaveFailed);
+        }
     }
 }

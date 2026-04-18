@@ -84,7 +84,7 @@ public class AddTestResultCommandHandler(IUnitOfWork unitOfWork, ICloudinaryServ
         var requiredTest = await _unitOfWork.DoctorAppointmentTests.AsQueryable()
             .Where(rt => rt.DoctorAppointment.PatientId == testResult.LabAppointment.PatientId
                 && rt.TestId == testResult.TestId
-                && rt.Status == TestResultStatus.Pending)
+                && rt.Status != TestResultStatus.Completed)
             .ExecuteUpdateAsync(setters => setters.SetProperty(a => a.Status, TestResultStatus.Completed), cancellationToken);
 
         return Result.Success();

@@ -91,7 +91,7 @@ public class BookLabAppointmentCommandHandler(IUnitOfWork unitOfWork, INotificat
             Notes = request.Notes,
             Address = request.Address,
             TotalFee = totalFee,
-            AppointmentType = Enum.Parse<AppointmentType>(request.AppointmentType,true),
+            AppointmentType = isHomeVisit ? AppointmentType.HomeVisit : AppointmentType.OnSiteVisit,
             Status = isHomeVisit ? AppointmentStatus.Pending : AppointmentStatus.Confirmed,
 
             TestResults = requestedTests.Select(t => new TestResult
@@ -106,6 +106,20 @@ public class BookLabAppointmentCommandHandler(IUnitOfWork unitOfWork, INotificat
 
         if(res <= 0)
             return Result.Failure<BookLabAppointmentResponse>(LabAppointmentErrors.SaveFailed);
+
+        // make the pending required tests in progress iwill only mark them if its not home visit and 
+        // iwill make them in progress when the lab accept the appointmetn in case of HOME visit
+        if (!isHomeVisit)
+        {
+            var testIds = appointment.TestResults.Select(tr => tr.TestId).ToList();
+
+            var requiredTest = await _unitOfWork.DoctorAppointmentTests.AsQueryable()
+                .Where(rt => rt.DoctorAppointment.PatientId == appointment.PatientId
+                    && testIds.Contains(rt.TestId)
+                    && rt.Status == TestResultStatus.Pending)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(a => a.Status, TestResultStatus.InProgress), cancellationToken);
+        }
+
 
         //sending email notificaton and the response
         await _notificationService.SendNewAppointmentNotificationAsync(
