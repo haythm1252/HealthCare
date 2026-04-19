@@ -41,9 +41,19 @@ public static class DependencyInjection
 
             services.AddJwtOptions(configuration);
 
+            services.AddSignalRConfig();
+
             return services;
         }
 
+        public IServiceCollection AddSignalRConfig()
+        {
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
+            });
+            return services;
+        }
         public IServiceCollection AddIdentityOptions(IConfiguration configuration)
         {
             // Identity
@@ -83,6 +93,21 @@ public static class DependencyInjection
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings!.Key)),
                     ValidIssuer = jwtSettings!.Issuer,
                     ValidAudience = jwtSettings.Audience
+                };
+
+                o.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/healthcare-hub")) 
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             });
             return services;

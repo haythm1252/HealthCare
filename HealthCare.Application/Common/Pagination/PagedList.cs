@@ -14,5 +14,14 @@ public class PagedList<T>(IEnumerable<T> items, int pageNumber, int count, int p
     public int TotalPages { get; private set; } = (int)Math.Ceiling(count / (double) pageSize);
     public bool HasPreviousPage => PageNumber > 1;
     public bool HasNextPage => PageNumber < TotalPages;
+
+    public void ReverseItems()
+    {
+        if (this.Items != null && this.Items.Any())
+        {
+            // This modifies the existing list in place
+            this.Items.Reverse();
+        }
+    }
 }
 

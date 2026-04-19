@@ -6,6 +6,7 @@ using HealthCare.Application;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
 using HealthCare.Infrastructure.Persistence.Seed;
+using HealthCare.Api.Hubs;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -47,5 +48,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseExceptionHandler();
+
+app.MapHub<HealthCareHub>("/healthcare-hub");
 
 app.Run();
