@@ -1,14 +1,18 @@
 ﻿using Google.GenAI;
 using Google.GenAI.Types;
 using HealthCare.Application.Common.Settings;
+using HealthCare.Application.Features.AiChatBot.Contracts;
 using HealthCare.Application.Services;
 using HealthCare.Domain.Entities;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Org.BouncyCastle.Ocsp;
 using System;
 using System.Collections.Generic;
+using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 
 namespace HealthCare.Infrastructure.Services;
 
@@ -54,6 +58,72 @@ public class AiChatService(IOptions<AiSettings> aiSettings, ILogger<AiChatServic
         _logger.LogWarning("All models failed. Returning static fallback JSON.");
         return errorJson;
     }
+
+
+    public async Task<GeminiParsedResponse> GetModelResponseAsync(string userMessage, string specialtiesList)
+    {
+        var httpClient = new HttpClient();
+
+        var url = "https://router.huggingface.co/v1/chat/completions";
+        var systemPrompt = _aiSettings.SecondarySystemPrompt + specialtiesList + "Dont Forget To Give Initial Diagnosis Or Asking Addtional Question If You Want";
+
+        var requestData = new
+        {
+            model = "mistralai/Mistral-7B-Instruct-v0.2:featherless-ai",
+            max_tokens = 2800,
+            messages = new[]
+            {
+                new { role = "system", content = systemPrompt },
+                new { role = "user", content = userMessage }
+            }
+        };
+
+        httpClient.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _aiSettings.HuggingFaceKey);
+
+        var response = await httpClient.PostAsJsonAsync(url, requestData);
+
+
+        GeminiParsedResponse Response = new GeminiParsedResponse(
+            Message: "I'm sorry, the AI service is currently facing some problems. Please try again",
+            SuggestedSpecialty: null
+        );
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogWarning("model faild with status code: {StatusCode} and reason: {ReasonPhrase}", response.StatusCode, response.ReasonPhrase);
+            return Response;
+        }
+
+        try
+        {
+            using var doc = await JsonDocument.ParseAsync(await response.Content.ReadAsStreamAsync());
+
+            var rawJson = doc.RootElement
+                .GetProperty("choices")[0]
+                .GetProperty("message")
+                .GetProperty("content")
+                .GetString();
+
+            if (!string.IsNullOrWhiteSpace(rawJson))
+            {
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                Response = JsonSerializer.Deserialize<GeminiParsedResponse>(rawJson, options) ?? Response;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning("Failed to parse model response: {Error}", ex.Message);
+        }
+
+        return Response;
+    }
+
+
+
+
+
+
 
 
 
@@ -119,5 +189,7 @@ public class AiChatService(IOptions<AiSettings> aiSettings, ILogger<AiChatServic
 
         return parts;
     }
+
+
 }
 

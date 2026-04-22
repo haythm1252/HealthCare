@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HealthCare.Application.Features.AiChatBot.Commands;
+namespace HealthCare.Application.Features.AiChatBot.Commands.Gemini;
 
-public record SendAiChatCommand(
+public record SendGeminiChatCommand(
     string UserId,
     string Message,
     IFormFile? Attachment

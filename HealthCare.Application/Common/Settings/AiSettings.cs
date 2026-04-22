@@ -10,8 +10,13 @@ public class AiSettings
     public static string SectionName = "AiSettings";
     [Required]
     public string ApiKey { get; set; } = string.Empty;
+
+    [Required]
+    public string HuggingFaceKey { get; set; } = string.Empty;
     [Required]
     public string SystemPrompt { get; set; } = string.Empty;
+    [Required]
+    public string SecondarySystemPrompt { get; set; } = string.Empty;
     [Required]
     public IEnumerable<string> FallbackModels { get; set; } = [];
 }

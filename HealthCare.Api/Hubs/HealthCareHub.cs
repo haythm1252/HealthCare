@@ -30,7 +30,7 @@ public class HealthCareHub(ISender mediatr, ILogger<HealthCareHub> logger) : Hub
         {
             var groupName = $"Chat_{chatId}";
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            _logger.LogWarning("joiend chat");
+            _logger.LogInformation("joiend chat");
 
         }
         else
@@ -55,7 +55,7 @@ public class HealthCareHub(ISender mediatr, ILogger<HealthCareHub> logger) : Hub
         if (result.IsSuccess)
         {
             await Clients.Group($"Chat_{chatId}").SendAsync("ReceiveMessage", result.Value);
-            _logger.LogWarning("message sent successfully");
+            _logger.LogInformation("message sent successfully");
         }
         else
         {

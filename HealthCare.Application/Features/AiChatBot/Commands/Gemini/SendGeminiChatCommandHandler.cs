@@ -15,21 +15,21 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 
-namespace HealthCare.Application.Features.AiChatBot.Commands;
+namespace HealthCare.Application.Features.AiChatBot.Commands.Gemini;
 
-public class SendAiChatCommandHandler(
+public class SendGeminiChatCommandHandler(
         IUnitOfWork unitOfWork,
         IAiChatService aiService,
         ICloudinaryService cloudinaryService,
-        ILogger<SendAiChatCommandHandler> logger
-    ) : IRequestHandler<SendAiChatCommand, Result<AiChatResponse>>
+        ILogger<SendGeminiChatCommandHandler> logger
+    ) : IRequestHandler<SendGeminiChatCommand, Result<AiChatResponse>>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IAiChatService _aiService = aiService;
     private readonly ICloudinaryService _cloudinaryService = cloudinaryService;
-    private readonly ILogger<SendAiChatCommandHandler> _logger = logger;
+    private readonly ILogger<SendGeminiChatCommandHandler> _logger = logger;
 
-    public async Task<Result<AiChatResponse>> Handle(SendAiChatCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AiChatResponse>> Handle(SendGeminiChatCommand request, CancellationToken cancellationToken)
     {
         var patient = await _unitOfWork.Patients.AsQueryable()
             .Where(p => p.UserId == request.UserId)
@@ -80,7 +80,8 @@ public class SendAiChatCommandHandler(
             .Take(4).OrderBy(m => m.CreatedAt)
             .ToListAsync(cancellationToken);
 
-        var specialties = string.Join(", ", await _unitOfWork.Specialties.AsQueryable().Select(s => s.Name).ToListAsync(cancellationToken));
+        var specialties = string.Join(", ", await _unitOfWork.Specialties.AsQueryable().Where(s => !s.IsDeleted)
+            .Select(s => s.Name).ToListAsync(cancellationToken));
 
 
         // gemini response
@@ -103,8 +104,9 @@ public class SendAiChatCommandHandler(
         if (!string.IsNullOrWhiteSpace(aiData!.SuggestedSpecialty))
         {
             recommendedDoctors = await _unitOfWork.Doctors.AsQueryable()
-                .Where(d => d.Specialty.Name == aiData.SuggestedSpecialty && d.User.City == patient.City)
-                .OrderByDescending(d => d.Rating)
+                .Where(d => d.Specialty.Name == aiData.SuggestedSpecialty)
+                .OrderByDescending(d => d.User.City == patient.City)
+                .ThenByDescending(d => d.Rating)
                 .ThenByDescending(d => d.RatingsCount)
                 .Take(3)
                 .Select(d => new DoctorSummaryResponse(d.Id, d.User.Name, d.Specialty.Name, d.Rating, d.RatingsCount, d.User.City))

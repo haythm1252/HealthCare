@@ -1,16 +1,14 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
-using HealthCare.Application.Features.AiChatBot.Commands;
+using HealthCare.Application.Features.AiChatBot.Commands.Gemini;
+using HealthCare.Application.Features.AiChatBot.Commands.Model;
 using HealthCare.Application.Features.AiChatBot.Contracts;
-using HealthCare.Application.Features.Labs.Commands.UpdateProfile;
-using HealthCare.Application.Features.Labs.Contracts;
 using HealthCare.Application.Features.Patients.Commands.UpdateProfile;
 using HealthCare.Application.Features.Patients.Contracts;
 using HealthCare.Application.Features.Patients.Queries.GetPatientMedicalRecord;
 using HealthCare.Application.Features.Patients.Queries.PatientProfile;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthCare.Api.Controllers;
@@ -27,7 +25,17 @@ public class PatientsController(ISender mediatr) : ControllerBase
     [Authorize(Roles = DefaultRoles.Patient)]
     public async Task<IActionResult> AiChat([FromForm] AiChatRequest request, CancellationToken cancellationToken)
     {
-        var command = new SendAiChatCommand(User.GetUserId()!, request.Message, request.Attachment);
+        var command = new SendGeminiChatCommand(User.GetUserId()!, request.Message, request.Attachment);
+
+        var res = await _mediatr.Send(command, cancellationToken);
+        return res.IsSuccess ? Ok(res.Value) : res.ToProblem();
+    }
+
+    [HttpPost("ai-chatbot-model")]
+    [Authorize(Roles = DefaultRoles.Patient)]
+    public async Task<IActionResult> AiChatbotModel([FromBody] ModelMessageRequest request, CancellationToken cancellationToken)
+    {
+        var command = new SendModelChatCommand(User.GetUserId()!, request.Message);
 
         var res = await _mediatr.Send(command, cancellationToken);
         return res.IsSuccess ? Ok(res.Value) : res.ToProblem();

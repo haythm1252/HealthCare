@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HealthCare.Application.Features.AiChatBot.Commands;
+namespace HealthCare.Application.Features.AiChatBot.Commands.Gemini;
 
-public class SendAiChatCommandValidator : AbstractValidator<SendAiChatCommand>
+public class SendGeminiChatCommandValidator : AbstractValidator<SendGeminiChatCommand>
 {
-    public SendAiChatCommandValidator()
+    public SendGeminiChatCommandValidator()
     {
         RuleFor(x => x.Message)
             .NotNull()
