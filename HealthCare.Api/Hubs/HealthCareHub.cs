@@ -1,6 +1,5 @@
 ﻿using HealthCare.Application.Common.Consts;
 using HealthCare.Application.Features.Communication.Commands.JoinChat;
-using HealthCare.Application.Features.Communication.Commands.JoinVideo;
 using HealthCare.Application.Features.Communication.Commands.SendMessage;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

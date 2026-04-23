@@ -120,14 +120,63 @@ public class AiChatService(IOptions<AiSettings> aiSettings, ILogger<AiChatServic
     }
 
 
+    public async Task<GeminiParsedResponse> GetOlamaMedGemmaResponseAsync(string userMessage, string specialtiesList)
+    {
+        var httpClient = new HttpClient();
+        var defaultResponse = new GeminiParsedResponse(
+            Message: "I'm sorry, the AI service is currently facing some problems.",
+            SuggestedSpecialty: null
+        );
 
+        httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0");
+        httpClient.DefaultRequestHeaders.Add("ngrok-skip-browser-warning", "true");
 
+        try
+        {
+            var response = await httpClient.PostAsJsonAsync(_aiSettings.OlamaUrl, new
+            {
+                model = "medgemma:4b",
+                messages = new[] {
+                new { role = "system", content = _aiSettings.MedGemmaSystemPrompt + specialtiesList },
+                new { role = "user", content = userMessage }
+            },
+                stream = false
+            });
 
+            if (!response.IsSuccessStatusCode) return defaultResponse;
 
+            using var doc = await JsonDocument.ParseAsync(await response.Content.ReadAsStreamAsync());
 
+            var rawContent = doc.RootElement.GetProperty("message").GetProperty("content").GetString() ?? "";
 
+            string cleanJson = rawContent;
 
-    // convert the history messages and the new message to parts and contents that the gemini api use
+            if (rawContent.Contains("{") && rawContent.Contains("}"))
+            {
+                int startIndex = rawContent.IndexOf("{");
+                int endIndex = rawContent.LastIndexOf("}");
+                cleanJson = rawContent.Substring(startIndex, (endIndex - startIndex) + 1);
+            }
+
+            try
+            {
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var result = JsonSerializer.Deserialize<GeminiParsedResponse>(cleanJson, options);
+                return result ?? defaultResponse;
+            }
+            catch
+            {
+                return new GeminiParsedResponse(Message: rawContent, SuggestedSpecialty: null);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("MedGemma Error: {Error}", ex.Message);
+            return defaultResponse;
+        }
+    }
+
+    
     private List<Content> PrepareContents(string? userMessage, string? attachmentUrl, List<AiMessage> history)
     {
         var contents = new List<Content>();

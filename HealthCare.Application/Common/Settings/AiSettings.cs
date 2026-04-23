@@ -19,4 +19,10 @@ public class AiSettings
     public string SecondarySystemPrompt { get; set; } = string.Empty;
     [Required]
     public IEnumerable<string> FallbackModels { get; set; } = [];
+
+    [Required]
+    public string MedGemmaSystemPrompt { get; set; } = string.Empty;
+
+    [Required]
+    public string OlamaUrl { get; set; } = string.Empty;
 }

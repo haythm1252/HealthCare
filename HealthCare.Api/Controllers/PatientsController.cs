@@ -2,6 +2,7 @@
 using HealthCare.Application.Common.Consts;
 using HealthCare.Application.Features.AiChatBot.Commands.Gemini;
 using HealthCare.Application.Features.AiChatBot.Commands.Model;
+using HealthCare.Application.Features.AiChatBot.Commands.Olama;
 using HealthCare.Application.Features.AiChatBot.Contracts;
 using HealthCare.Application.Features.Patients.Commands.UpdateProfile;
 using HealthCare.Application.Features.Patients.Contracts;
@@ -36,6 +37,16 @@ public class PatientsController(ISender mediatr) : ControllerBase
     public async Task<IActionResult> AiChatbotModel([FromBody] ModelMessageRequest request, CancellationToken cancellationToken)
     {
         var command = new SendModelChatCommand(User.GetUserId()!, request.Message);
+
+        var res = await _mediatr.Send(command, cancellationToken);
+        return res.IsSuccess ? Ok(res.Value) : res.ToProblem();
+    }
+
+    [HttpPost("ai-olama-model-medgemma")]
+    [Authorize(Roles = DefaultRoles.Patient)]
+    public async Task<IActionResult> AiOlamaModelMedGemma([FromBody] ModelMessageRequest request, CancellationToken cancellationToken)
+    {
+        var command = new SendOlamaChatCommand(User.GetUserId()!, request.Message);
 
         var res = await _mediatr.Send(command, cancellationToken);
         return res.IsSuccess ? Ok(res.Value) : res.ToProblem();

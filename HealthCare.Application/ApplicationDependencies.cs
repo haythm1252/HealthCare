@@ -54,6 +54,11 @@ public static class ApplicationDependencies
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
+            services.AddOptions<AgoraSettings>()
+                .Bind(configuration.GetSection(AgoraSettings.SectionName))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+
             return services;
         }
     }
