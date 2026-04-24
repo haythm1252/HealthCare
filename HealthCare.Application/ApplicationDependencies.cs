@@ -54,11 +54,10 @@ public static class ApplicationDependencies
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
-            services.AddOptions<AgoraSettings>()
-                .Bind(configuration.GetSection(AgoraSettings.SectionName))
+            services.AddOptions<MeetingSettings>()
+                .Bind(configuration.GetSection(MeetingSettings.SectionName))
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
-
             return services;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
 using HealthCare.Application.Features.Appointments.Contracts;
+using HealthCare.Application.Features.Communication.Commands.GetOrGenerateMeeting;
 using HealthCare.Application.Features.DoctorAppointments.Commands.AddDiagnosis;
 using HealthCare.Application.Features.DoctorAppointments.Commands.BookDoctorAppointment;
 using HealthCare.Application.Features.DoctorAppointments.Contracts;
@@ -37,6 +38,16 @@ public class DoctorAppointmentsController(ISender mediatr) : ControllerBase
         var query = new GetDoctorAppointmentDetailsQuery(User.GetUserId()!, User.GetRole()!, id);
 
         var result = await _mediatr.Send(query, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+    }
+
+    [HttpPost("{id:guid}/prepare-meetings")]
+    [Authorize(Roles = $"{DefaultRoles.Patient},{DefaultRoles.Doctor}")]
+    public async Task<IActionResult> GetOrGenerateMeeting([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        var command = new GetOrGenerateMeetingCommand(User.GetUserId()!, id);
+
+        var result = await _mediatr.Send(command, cancellationToken);
         return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
     }
 

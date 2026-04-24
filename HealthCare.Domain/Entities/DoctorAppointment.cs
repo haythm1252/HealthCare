@@ -22,6 +22,7 @@ public sealed class DoctorAppointment : BaseEntity
     public PaymentStatus PaymentStatus { get; set; }
     public DateTime? PaymentDate { get; set; }
 
+    public string? MeetingUrl { get; set; }
 
     public Guid DoctorSlotId { get; set; }
     public DoctorSlot DoctorSlot { get; set; } = default!;
