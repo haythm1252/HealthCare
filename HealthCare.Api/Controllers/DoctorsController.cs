@@ -1,5 +1,6 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
+using HealthCare.Application.Features.Dashboards.Doctor.Queries.GetDashboard;
 using HealthCare.Application.Features.Doctors.Commands.UpdateConsultationSettings;
 using HealthCare.Application.Features.Doctors.Commands.UpdateProfile;
 using HealthCare.Application.Features.Doctors.Contracts;
@@ -34,6 +35,15 @@ namespace HealthCare.Api.Controllers
         {
             var result = await _mediatr.Send(new GetDoctorBookingDetailsQuery(id), cancellationToken);
             return result.IsSuccess ? Ok(result) : result.ToProblem();
+        }
+
+        [HttpGet("dashboard")]
+        [Authorize(Roles = DefaultRoles.Doctor)]
+        public async Task<IActionResult> GetDashboard(CancellationToken cancellationToken)
+        {
+            var result = await _mediatr.Send(new GetDoctorDashboardQuery(User.GetUserId()!), cancellationToken);
+
+            return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
         }
 
         [Authorize(Roles = DefaultRoles.Doctor)]

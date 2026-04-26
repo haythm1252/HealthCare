@@ -96,7 +96,7 @@ public class BookNurseAppointmentCommandHandler(IUnitOfWork unitOfWork, INotific
             Address = request.Address,
             Status = AppointmentStatus.Pending,
             ServiceType = serviceTypeEnum,
-            Hours = request.Hours,
+            Hours = serviceTypeEnum == NurseServiceType.HourlyStay ? request.Hours : null,
             TotalFee = totalFee
         };
 

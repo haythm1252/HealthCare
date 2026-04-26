@@ -12,11 +12,12 @@ namespace HealthCare.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = DefaultRoles.Admin)]
 public class UsersController(ISender mediatr) : ControllerBase
 {
     private readonly ISender _mediatr = mediatr;
 
-    [Authorize(Roles = DefaultRoles.Admin)]
+
     [HttpGet]
     public async Task<IActionResult> GetUsers([FromQuery] GetUsersQuery query, CancellationToken cancellationToken)
     {
@@ -24,7 +25,6 @@ public class UsersController(ISender mediatr) : ControllerBase
         return Ok(result);
     }
 
-    [Authorize(Roles = DefaultRoles.Admin)]
     [HttpPatch("{id}/toggle-status")]
     public async Task<IActionResult> ToggleUserStatus([FromRoute] string id, CancellationToken cancellationToken)
     {
@@ -32,7 +32,6 @@ public class UsersController(ISender mediatr) : ControllerBase
         return result.IsSuccess ? Ok() : result.ToProblem();
     }
 
-    [Authorize(Roles = DefaultRoles.Admin)]
     [HttpPost("medical-staff-registeration")]
     public async Task<IActionResult> MedicalStaffRegister([FromBody] MedicalStaffRegisterCommand command, CancellationToken cancellationToken)
     {

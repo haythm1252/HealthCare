@@ -1,5 +1,6 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
+using HealthCare.Application.Features.Dashboards.Nurse.Queries.GetDashboard;
 using HealthCare.Application.Features.Doctors.Queries.DoctorBookingDetails;
 using HealthCare.Application.Features.Doctors.Queries.GetDoctors;
 using HealthCare.Application.Features.Labs.Commands.UpdateSchedule;
@@ -40,6 +41,14 @@ public class NursesController(ISender mediatr) : ControllerBase
         return result.IsSuccess ? Ok(result) : result.ToProblem();
     }
 
+    [HttpGet("dashboard")]
+    [Authorize(Roles = DefaultRoles.Nurse)] 
+    public async Task<IActionResult> GetDashboard(CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(new GetNurseDashboardQuery(User.GetUserId()!), cancellationToken);
+
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+    }
 
     [Authorize(Roles = DefaultRoles.Nurse)]
     [HttpGet("me/schedule")]

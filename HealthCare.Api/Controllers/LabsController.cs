@@ -1,5 +1,6 @@
 ﻿using HealthCare.Api.Extentions;
 using HealthCare.Application.Common.Consts;
+using HealthCare.Application.Features.Dashboards.Lab.Queries.GetDashboard;
 using HealthCare.Application.Features.Doctors.Commands.UpdateConsultationSettings;
 using HealthCare.Application.Features.Doctors.Contracts;
 using HealthCare.Application.Features.Doctors.Queries.DoctorBookingDetails;
@@ -37,6 +38,15 @@ public class LabsController(ISender mediatr) : ControllerBase
     public async Task<IActionResult> GetDetails([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var result = await _mediatr.Send(new GetLabBookingDetailsQuery(id), cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+    }
+
+    [HttpGet("dashboard")]
+    [Authorize(Roles = DefaultRoles.Lab)]
+    public async Task<IActionResult> GetDashboard(CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send(new GetLabDashboardQuery(User.GetUserId()!), cancellationToken);
+
         return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
     }
 
