@@ -263,7 +263,6 @@ public class HealthCareSeeder
 
         foreach (var test in popularTests)
         {
-            // بنعمل Check بالاسم عشان ميتكررش
             if (!await context.Tests.AnyAsync(t => t.Name == test.Name))
             {
                 context.Tests.Add(test);
