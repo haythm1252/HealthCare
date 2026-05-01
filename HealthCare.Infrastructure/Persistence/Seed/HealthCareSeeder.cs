@@ -27,6 +27,7 @@ public class HealthCareSeeder
         await SeedNurseAsync(userManager, context);
         await SeedPatientAsync(userManager, context);
         await SeedLabAsync(userManager, context);
+        await SeedTestsAsync(context);
         //await SeedSpecialtiesAsync(context);
     }
 
@@ -210,4 +211,65 @@ public class HealthCareSeeder
 
     //    await context.SaveChangesAsync();
     //}
+
+
+    private static async Task SeedTestsAsync(ApplicationDbContext context)
+    {
+        var popularTests = new List<Test>
+    {
+        new Test
+        {
+            Name = "Liver Function Test (LFT)",
+            Description = "Measures proteins, liver enzymes, and bilirubin in your blood to check liver health.",
+            PreRequisites = "Fasting for 8-12 hours is usually recommended."
+        },
+        new Test
+        {
+            Name = "Kidney Function Test (KFT)",
+            Description = "Includes tests like Creatinine and Urea to evaluate how well your kidneys are working.",
+            PreRequisites = "Drink plenty of water before the test."
+        },
+        new Test
+        {
+            Name = "Lipid Profile",
+            Description = "Comprehensive test for LDL, HDL, and Triglycerides.",
+            PreRequisites = "Strict fasting (water only) for 9-12 hours."
+        },
+        new Test
+        {
+            Name = "Thyroid Function (TSH)",
+            Description = "Measures Thyroid Stimulating Hormone to check for hypo or hyperthyroidism.",
+            PreRequisites = "No specific fasting required unless specified by the doctor."
+        },
+        new Test
+        {
+            Name = "Hemoglobin A1c (HbA1c)",
+            Description = "Measures your average blood sugar levels over the past 3 months.",
+            PreRequisites = "No fasting required."
+        },
+        new Test
+        {
+            Name = "Vitamin D Test",
+            Description = "Measures the level of vitamin D in your blood.",
+            PreRequisites = "No special preparation needed."
+        },
+        new Test
+        {
+            Name = "Urinalysis",
+            Description = "Physical, chemical, and microscopic examination of urine to detect infections.",
+            PreRequisites = "The first morning urine sample is preferred."
+        }
+    };
+
+        foreach (var test in popularTests)
+        {
+            // بنعمل Check بالاسم عشان ميتكررش
+            if (!await context.Tests.AnyAsync(t => t.Name == test.Name))
+            {
+                context.Tests.Add(test);
+            }
+        }
+        await context.SaveChangesAsync();
+    }
+
 }

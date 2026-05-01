@@ -144,6 +144,7 @@ public class AiChatService(IOptions<AiSettings> aiSettings, ILogger<AiChatServic
             });
 
             if (!response.IsSuccessStatusCode) return defaultResponse;
+            _logger.LogWarning("MedGemma response success with status code: {StatusCode} and reason: {ReasonPhrase}", response.StatusCode, response.ReasonPhrase);
 
             using var doc = await JsonDocument.ParseAsync(await response.Content.ReadAsStreamAsync());
 

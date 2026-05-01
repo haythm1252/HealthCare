@@ -1,4 +1,5 @@
-﻿using HealthCare.Application.Common.Result;
+﻿using HealthCare.Application.Common.Helpers;
+using HealthCare.Application.Common.Result;
 using HealthCare.Application.Features.Communication.Contracts;
 using HealthCare.Application.Interfaces.Repositories.UnitOfWork;
 using HealthCare.Application.Services;
@@ -19,8 +20,8 @@ public class GetOrGenerateMeetingCommandHandler(IUnitOfWork unitOfWork, IMeeting
 
     public async Task<Result<MeetingResponse>> Handle(GetOrGenerateMeetingCommand request, CancellationToken cancellationToken)
     {
-        var now = TimeOnly.FromDateTime(DateTime.Now);
-        var today = DateOnly.FromDateTime(DateTime.Now);
+        var now = TimeOnly.FromDateTime(DateTime.UtcNow.GetEgyptTime());
+        var today = DateOnly.FromDateTime(DateTime.UtcNow.GetEgyptTime());
 
         var appointment = await _unitOfWork.DoctorAppointments.AsQueryable()
             .Where(a => a.Id == request.AppointmentId &&

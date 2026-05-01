@@ -65,6 +65,8 @@ public class BookNurseAppointmentCommandHandler(IUnitOfWork unitOfWork, INotific
         if (request.StartTime < shift.StartTime || request.StartTime > shift.EndTime)
             return Result.Failure<BookNurseAppointmentResponse>(NurseAppointmentErrors.OutsideShift);
 
+
+        // i only check if the shift booked by the same patient because the nurse can have more than one appointment in the same shift but with different patients but the same patient can't book more than one appointment in the same shift
         var isBooked = await _unitOfWork.NurseAppointments
             .AnyAsync(na => na.PatientId == patient.Id && na.NurseId == request.NurseId && na.NurseShiftId == request.ShiftId 
             && na.Status != AppointmentStatus.Cancelled, cancellationToken);

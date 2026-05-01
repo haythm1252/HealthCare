@@ -40,8 +40,13 @@ public class PatientRepository(ApplicationDbContext context) : BaseRepository<Pa
                     p.OtherMedicalConditions
                 ),
 
+                // add the check for the diagonsis and prescriptions and doctor tests to only show the appointment that contain data in the medical record
                 Diagnoses = p.DoctorAppointments
-                    .Where(a => a.Status == AppointmentStatus.Completed)
+                    .Where(a => a.Status == AppointmentStatus.Completed && (
+                                !string.IsNullOrWhiteSpace(a.Diagnosis) ||
+                                !string.IsNullOrWhiteSpace(a.Prescriptions) ||
+                                a.DoctorAppointmentTests.Any()
+                            ))
                     .Select(a => new DiagnosisDto(
                         a.Id,
                         a.Doctor.User.Name,

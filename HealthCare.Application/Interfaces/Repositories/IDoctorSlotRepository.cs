@@ -8,4 +8,5 @@ namespace HealthCare.Application.Interfaces.Repositories;
 
 public interface IDoctorSlotRepository : IBaseRepository<DoctorSlot>
 {
+    Task<(int slotsToDel, int slotsDeleted)> DeleteSlots();
 }

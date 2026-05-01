@@ -3,6 +3,7 @@ using Hangfire;
 using Hangfire.SqlServer;
 using HealthCare.Application.Common.Settings;
 using HealthCare.Application.Interfaces.Repositories.UnitOfWork;
+using HealthCare.Application.Jobs;
 using HealthCare.Application.Services;
 using HealthCare.Domain.Users;
 using HealthCare.Infrastructure.Persistence;
@@ -58,6 +59,8 @@ public static class InfrastructureDependencies
             services.AddScoped<IPaymobService, PaymobService>();
             services.AddScoped<IAiChatService, AiChatService>();
             services.AddScoped<IMeetingService, MeetingService>();
+
+            services.AddScoped<IJobsService, JobsService>();
 
             return services;
         }

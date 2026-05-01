@@ -61,7 +61,7 @@ public class CancelAppointmentCommandHandler(IUnitOfWork unitOfWork) : IRequestH
                 if (nurseAppointment is null)
                     return Result.Failure(AppointmentErrors.NotFound);
 
-                var nurseCancellationDeadline = nurseAppointment.NurseShift.Date.ToDateTime(nurseAppointment.StartTime);
+                var nurseCancellationDeadline = nurseAppointment.NurseShift.Date.ToDateTime(nurseAppointment.StartTime).AddHours(-4);
 
                 if (DateTime.UtcNow > nurseCancellationDeadline)
                     return Result.Failure(AppointmentErrors.CancellationNotAllowed);
@@ -80,7 +80,7 @@ public class CancelAppointmentCommandHandler(IUnitOfWork unitOfWork) : IRequestH
                 if (labAppointment is null)
                     return Result.Failure(AppointmentErrors.NotFound);
 
-                if (DateTime.UtcNow > labAppointment.Date.ToDateTime(labAppointment.StartTime)
+                if (DateTime.UtcNow > labAppointment.Date.ToDateTime(labAppointment.StartTime).AddHours(-4)
                     || labAppointment.Status == AppointmentStatus.Completed || labAppointment.Status == AppointmentStatus.NoShow)
                     return Result.Failure(AppointmentErrors.CancellationNotAllowed);
 

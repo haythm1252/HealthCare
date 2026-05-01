@@ -1,4 +1,5 @@
-﻿using HealthCare.Application.Common.Result;
+﻿using HealthCare.Application.Common.Helpers;
+using HealthCare.Application.Common.Result;
 using HealthCare.Application.Features.Chats.Contracts;
 using HealthCare.Application.Interfaces.Repositories.UnitOfWork;
 using HealthCare.Domain.Entities;
@@ -28,7 +29,7 @@ public class SendMessageCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler
             ChatId = request.ChatId,
             SenderId = request.UserId,
             Content = request.Message,
-            CreatedAt = DateTime.Now
+            CreatedAt = DateTime.UtcNow.GetEgyptTime()
         };
 
         await _unitOfWork.Messages.AddAsync(message, cancellationToken);

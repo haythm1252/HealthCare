@@ -45,7 +45,8 @@ public class AddReviewCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<A
                 if (doctor is null)
                     return Result.Failure<ReviewResponse>(ReviewErrors.TargetNotFound);
 
-                var hasDocAppointment = await _unitOfWork.DoctorAppointments.AnyAsync(da => da.DoctorId == doctor.Id && da.PatientId == patient.Id, cancellationToken);
+                var hasDocAppointment = await _unitOfWork.DoctorAppointments.AnyAsync(da => da.DoctorId == doctor.Id && da.PatientId == patient.Id
+                                        && da.Status == AppointmentStatus.Completed, cancellationToken);
                 if (!hasDocAppointment)
                     return Result.Failure<ReviewResponse>(ReviewErrors.NoAppointmentExist);
 
@@ -65,7 +66,8 @@ public class AddReviewCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<A
                 if (nurse is null)
                     return Result.Failure<ReviewResponse>(ReviewErrors.TargetNotFound);
 
-                var hasNurseAppointment = await _unitOfWork.NurseAppointments.AnyAsync(na => na.NurseId == nurse.Id && na.PatientId == patient.Id, cancellationToken);
+                var hasNurseAppointment = await _unitOfWork.NurseAppointments.AnyAsync(na => na.NurseId == nurse.Id && na.PatientId == patient.Id
+                                        && na.Status == AppointmentStatus.Completed, cancellationToken);
                 if (!hasNurseAppointment)
                     return Result.Failure<ReviewResponse>(ReviewErrors.NoAppointmentExist);
 
@@ -86,7 +88,8 @@ public class AddReviewCommandHandler(IUnitOfWork unitOfWork) : IRequestHandler<A
                 if (lab is null)
                     return Result.Failure<ReviewResponse>(ReviewErrors.TargetNotFound);
 
-                var hasLabAppointment = await _unitOfWork.LabAppointments.AnyAsync(la => la.LabId == lab.Id && la.PatientId == patient.Id, cancellationToken);
+                var hasLabAppointment = await _unitOfWork.LabAppointments.AnyAsync(la => la.LabId == lab.Id && la.PatientId == patient.Id
+                                        && (la.Status == AppointmentStatus.Completed || la.Status == AppointmentStatus.ResultsDone), cancellationToken);
                 if (!hasLabAppointment)
                     return Result.Failure<ReviewResponse>(ReviewErrors.NoAppointmentExist);
 

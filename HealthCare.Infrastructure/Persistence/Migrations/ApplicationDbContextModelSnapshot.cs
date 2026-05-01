@@ -64,7 +64,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("AiMessages");
+                    b.ToTable("AiMessages", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.Chat", b =>
@@ -94,7 +94,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Chats");
+                    b.ToTable("Chats", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.DoctorAppointment", b =>
@@ -175,7 +175,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("DoctorAppointments");
+                    b.ToTable("DoctorAppointments", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.DoctorAppointmentTest", b =>
@@ -210,7 +210,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("DoctorAppointmentTests");
+                    b.ToTable("DoctorAppointmentTests", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.DoctorSlot", b =>
@@ -248,7 +248,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.HasIndex("DoctorId", "Date", "StartTime")
                         .IsUnique();
 
-                    b.ToTable("DoctorSlots");
+                    b.ToTable("DoctorSlots", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.EmailOtp", b =>
@@ -270,7 +270,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EmailOtps");
+                    b.ToTable("EmailOtps", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.LabAppointment", b =>
@@ -326,7 +326,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("LabAppointments");
+                    b.ToTable("LabAppointments", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.LabTest", b =>
@@ -363,7 +363,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("LabTests");
+                    b.ToTable("LabTests", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.Message", b =>
@@ -410,7 +410,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.NurseAppointment", b =>
@@ -473,7 +473,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("NurseAppointments");
+                    b.ToTable("NurseAppointments", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.NurseShift", b =>
@@ -510,7 +510,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("NurseId");
 
-                    b.ToTable("NurseShifts");
+                    b.ToTable("NurseShifts", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.Post", b =>
@@ -561,7 +561,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SpecialtyId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.Review", b =>
@@ -601,7 +601,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.Specialty", b =>
@@ -626,7 +626,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Specialties");
+                    b.ToTable("Specialties", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.Test", b =>
@@ -661,7 +661,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tests");
+                    b.ToTable("Tests", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Entities.TestResult", b =>
@@ -713,7 +713,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("TestId");
 
-                    b.ToTable("TestResults");
+                    b.ToTable("TestResults", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Users.ApplicationUser", b =>
@@ -880,7 +880,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Doctors");
+                    b.ToTable("Doctors", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Users.Lab", b =>
@@ -933,7 +933,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Labs");
+                    b.ToTable("Labs", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Users.Nurse", b =>
@@ -983,7 +983,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Nurses");
+                    b.ToTable("Nurses", (string)null);
                 });
 
             modelBuilder.Entity("HealthCare.Domain.Users.Patient", b =>
@@ -1038,7 +1038,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Patients");
+                    b.ToTable("Patients", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1497,7 +1497,7 @@ namespace HealthCare.Infrastructure.Persistence.Migrations
 
                             b1.HasKey("LabId");
 
-                            b1.ToTable("Labs");
+                            b1.ToTable("Labs", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("LabId");

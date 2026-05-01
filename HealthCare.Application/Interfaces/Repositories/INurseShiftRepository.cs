@@ -8,4 +8,6 @@ namespace HealthCare.Application.Interfaces.Repositories;
 
 public interface INurseShiftRepository : IBaseRepository<NurseShift>
 {
+    Task<(int shiftsToDel, int shiftsDeleted)> DeleteShifts();
+
 }
