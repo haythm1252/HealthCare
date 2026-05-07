@@ -48,7 +48,7 @@ public class GetLabAppointmentDetailsQueryHandler(IUnitOfWork unitOfWork)
                 a.Address,
 
                 a.TestResults.Select(tr => new TestResultDto(
-                    tr.TestId,
+                    tr.Id,
                     tr.Test.Name,
                     tr.Value,
                     tr.Summary,

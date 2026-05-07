@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HealthCare.Application.Features.AiChatBot.Commands.Olama;
+namespace HealthCare.Application.Features.AiChatBot.Commands.MedGemma;
 
-public record SendOlamaChatCommand(
+public record SendMedGemmaChatCommand(
     string UserId,
     string Message
 ) : IRequest<Result<AiChatResponse>>;

@@ -16,15 +16,15 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 
-namespace HealthCare.Application.Features.AiChatBot.Commands.Olama;
+namespace HealthCare.Application.Features.AiChatBot.Commands.MedGemma;
 
-public class SendOlamaChatCommandHandler(IUnitOfWork unitOfWork,IAiChatService aiService) 
-    : IRequestHandler<SendOlamaChatCommand, Result<AiChatResponse>>
+public class SendMedGemmaChatCommandHandler(IUnitOfWork unitOfWork,IAiChatService aiService) 
+    : IRequestHandler<SendMedGemmaChatCommand, Result<AiChatResponse>>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IAiChatService _aiService = aiService;
 
-    public async Task<Result<AiChatResponse>> Handle(SendOlamaChatCommand request, CancellationToken cancellationToken)
+    public async Task<Result<AiChatResponse>> Handle(SendMedGemmaChatCommand request, CancellationToken cancellationToken)
     {
         var patient = await _unitOfWork.Patients.AsQueryable()
                     .Where(p => p.UserId == request.UserId)
@@ -38,7 +38,7 @@ public class SendOlamaChatCommandHandler(IUnitOfWork unitOfWork,IAiChatService a
             .Select(s => s.Name).ToListAsync(cancellationToken));
 
         // model response
-        var aiData = await _aiService.GetOlamaMedGemmaResponseAsync(request.Message, specialties);
+        var aiData = await _aiService.GetMedGemmaResponseAsync(request.Message, specialties);
 
         // recommendation if the specility not null
         IEnumerable<DoctorSummaryResponse>? recommendedDoctors = null;

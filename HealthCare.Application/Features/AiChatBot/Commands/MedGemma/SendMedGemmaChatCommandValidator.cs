@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HealthCare.Application.Features.AiChatBot.Commands.Olama;
+namespace HealthCare.Application.Features.AiChatBot.Commands.MedGemma;
 
-public class SendOlamaChatCommandValidator : AbstractValidator<SendOlamaChatCommand>
+public class SendMedGemmaChatCommandValidator : AbstractValidator<SendMedGemmaChatCommand>
 {
-    public SendOlamaChatCommandValidator()
+    public SendMedGemmaChatCommandValidator()
     {
         RuleFor(x => x.Message)
             .NotNull()

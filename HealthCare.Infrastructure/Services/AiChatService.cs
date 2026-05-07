@@ -120,7 +120,7 @@ public class AiChatService(IOptions<AiSettings> aiSettings, ILogger<AiChatServic
     }
 
 
-    public async Task<GeminiParsedResponse> GetOlamaMedGemmaResponseAsync(string userMessage, string specialtiesList)
+    public async Task<GeminiParsedResponse> GetMedGemmaResponseAsync(string userMessage, string specialtiesList)
     {
         var httpClient = new HttpClient();
         var defaultResponse = new GeminiParsedResponse(
@@ -133,7 +133,7 @@ public class AiChatService(IOptions<AiSettings> aiSettings, ILogger<AiChatServic
 
         try
         {
-            var response = await httpClient.PostAsJsonAsync(_aiSettings.OlamaUrl, new
+            var response = await httpClient.PostAsJsonAsync(_aiSettings.MedGemmaUrl, new
             {
                 model = "medgemma:4b",
                 messages = new[] {

@@ -11,6 +11,6 @@ public interface IAiChatService
     Task<string> GetGeminiResponseAsync(string? userMessage, string? attachmentUrl, List<AiMessage> history, string specialtiesList);
     Task<GeminiParsedResponse> GetModelResponseAsync(string userMessage, string specialtiesList);
 
-    Task<GeminiParsedResponse> GetOlamaMedGemmaResponseAsync(string userMessage, string specialtiesList);
+    Task<GeminiParsedResponse> GetMedGemmaResponseAsync(string userMessage, string specialtiesList);
 
 }

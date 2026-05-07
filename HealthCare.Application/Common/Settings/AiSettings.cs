@@ -24,5 +24,5 @@ public class AiSettings
     public string MedGemmaSystemPrompt { get; set; } = string.Empty;
 
     [Required]
-    public string OlamaUrl { get; set; } = string.Empty;
+    public string MedGemmaUrl { get; set; } = string.Empty;
 }
