@@ -13,8 +13,8 @@ public static class AppointmentErrors
     public static readonly Error InvalidStatus =
         new("Appointment.InvalidStatus", "Only pending appointments can be Confirmed.", 400);
 
-    public static readonly Error NotConfirmed =
-        new("Appointment.NotConfirmed", "The appointment status is not Confrimed.", 400);
+    public static readonly Error NotCompleted =
+        new("Appointment.NotCompleted", "The appointment status is not Completed.", 400);
     public static Error TooEarlyToFinalize =>
         new("Appointment.TooEarly", "You cannot finalize an appointment before its scheduled time.", 400);
 

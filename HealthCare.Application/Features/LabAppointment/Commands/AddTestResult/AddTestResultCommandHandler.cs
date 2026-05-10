@@ -71,7 +71,7 @@ public class AddTestResultCommandHandler(IUnitOfWork unitOfWork, ICloudinaryServ
         testResult.LastModified = DateTime.UtcNow;
 
 
-        // If there is No tests are in progress make the appointment statuse resultsdone 
+        // If there is No tests are in progress or pending make the appointment statuse resultsdone 
         var hasUnFinishedTests = await _unitOfWork.TestResults.AsQueryable().AnyAsync(tr => tr.LabAppointmentId == testResult.LabAppointmentId
             && tr.Id != testResult.Id && tr.Status != TestResultStatus.Completed, cancellationToken);
 
